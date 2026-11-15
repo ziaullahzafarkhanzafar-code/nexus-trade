@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cambridge Opticians — B2B Optical Wholesale & Prescription Invoice Hub</title>
+  <title>CAMBRIDGE Opticians — Shop POS & Invoice Management System</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Inter & Courier Prime (for stamped receipt serials) -->
@@ -26,11 +26,6 @@
               800: '#1E3A8A',
               900: '#16284C',
               950: '#0B1528',
-            },
-            paper: {
-              cream: '#E6DFC5',
-              light: '#EFEAD6',
-              ink: '#1A2744',
             }
           }
         }
@@ -43,11 +38,11 @@
     .cambridge-paper {
       background-color: #E7E0C4;
       background-image:
-        radial-gradient(rgba(26, 39, 68, 0.035) 1px, transparent 0),
-        linear-gradient(180deg, rgba(255,255,255,0.22) 0%, rgba(196,185,146,0.18) 100%);
+        radial-gradient(rgba(26, 39, 68, 0.04) 1px, transparent 0),
+        linear-gradient(180deg, rgba(255,255,255,0.24) 0%, rgba(196,185,146,0.22) 100%);
       background-size: 14px 14px, 100% 100%;
       color: #1A2744;
-      box-shadow: 0 18px 40px -12px rgba(15, 23, 42, 0.28), inset 0 0 36px rgba(182, 169, 126, 0.35);
+      box-shadow: 0 20px 45px -15px rgba(15, 23, 42, 0.32), inset 0 0 40px rgba(182, 169, 126, 0.35);
     }
 
     .receipt-line-input {
@@ -55,14 +50,14 @@
       border: none;
       border-bottom: 1.5px solid #1A2744;
       color: #0F172A;
-      font-weight: 600;
+      font-weight: 700;
       padding: 1px 4px;
       outline: none;
       transition: background-color 0.15s ease;
     }
 
     .receipt-line-input:focus {
-      background-color: rgba(255, 255, 255, 0.45);
+      background-color: rgba(255, 255, 255, 0.5);
     }
 
     .rx-grid-input {
@@ -82,7 +77,7 @@
       background-color: rgba(255, 255, 255, 0.55);
     }
 
-    /* Clean Print Styles so clicking Print prints ONLY the Cambridge Opticians Invoice Card */
+    /* Dedicated Print Styles: Outputs ONLY the Cambridge Opticians Receipt Card */
     @media print {
       body * {
         visibility: hidden !important;
@@ -99,1832 +94,1448 @@
         max-width: 100% !important;
         margin: 0 !important;
         box-shadow: none !important;
-        border: 1px solid #1A2744 !important;
+        border: 1.5px solid #1A2744 !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
+      }
+      .no-print-inside-slip {
+        display: none !important;
       }
     }
   </style>
 </head>
 <body class="bg-slate-100 text-slate-900 font-sans antialiased selection:bg-amber-200 selection:text-navy-900">
 
-  <!-- ==================== TOP TRUST & BRANCH BAR ==================== -->
-  <div class="bg-navy-950 text-slate-300 text-xs py-2 px-4 border-b border-slate-800">
-    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
-      <div class="flex items-center gap-4">
-        <span class="flex items-center gap-1.5 text-amber-300 font-semibold">
-          <i class="fa-solid fa-glasses"></i> Cambridge Opticians — Wholesale & Prescription Division
-        </span>
-        <span class="hidden md:inline text-slate-600">|</span>
-        <span class="hidden md:flex items-center gap-1.5 text-slate-300">
-          <i class="fa-solid fa-location-dot text-orange-400"></i> Shakeel Plaza, University Road, Opp: Islamia College Peshawar
-        </span>
-      </div>
-      <div class="flex items-center gap-4">
-        <button onclick="switchView('invoiceSlip')" class="hover:text-white transition flex items-center gap-1.5 font-semibold text-emerald-400">
-          <i class="fa-solid fa-file-invoice"></i> Open Official Rx & Order Invoice
-        </button>
-        <span class="text-slate-600">|</span>
-        <span class="text-slate-300">Currency: <strong class="text-white">PKR (Rs.)</strong></span>
-      </div>
-    </div>
-  </div>
+  <div class="min-h-screen flex flex-col lg:flex-row">
 
-  <!-- ==================== MAIN HEADER & NAVIGATION ==================== -->
-  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
-      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3.5">
-
-        <!-- Brand Logo & Mobile Actions -->
-        <div class="flex items-center justify-between">
-          <a href="#" onclick="switchView('marketplace'); return false;" class="flex items-center gap-3 group">
-            <div class="w-11 h-11 rounded-xl bg-navy-900 flex items-center justify-center text-white shadow-md group-hover:scale-105 transition">
-              <i class="fa-solid fa-glasses text-xl text-amber-300"></i>
+    <!-- ==================== LEFT SIDEBAR NAVIGATION (MANAGEMENT SYSTEM) ==================== -->
+    <aside class="w-full lg:w-64 bg-slate-950 text-slate-300 flex flex-col justify-between shrink-0 border-b lg:border-b-0 lg:border-r border-slate-800">
+      <div>
+        <!-- Brand Header -->
+        <div class="p-5 border-b border-slate-800/90 flex items-center justify-between lg:justify-start gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center shadow-md shrink-0">
+              <i class="fa-solid fa-glasses text-lg"></i>
             </div>
             <div>
-              <div class="flex items-baseline gap-1.5">
-                <span class="text-xl font-black tracking-tight text-navy-900">CAMBRIDGE</span>
-                <span class="text-base font-bold text-navy-800">Opticians</span>
-              </div>
-              <span class="block text-[10px] font-semibold uppercase tracking-widest text-slate-500 -mt-1">B2B Optical Supply & Rx Portal</span>
+              <div class="text-base font-black tracking-tight text-white leading-none">CAMBRIDGE</div>
+              <div class="text-xs font-bold text-amber-300 tracking-wide mt-0.5">Opticians POS</div>
             </div>
-          </a>
-
-          <!-- Mobile Cart & Invoice Buttons -->
-          <div class="flex lg:hidden items-center gap-2">
-            <button onclick="switchView('invoiceSlip')" class="p-2.5 rounded-xl bg-amber-100 text-navy-900 hover:bg-amber-200 text-xs font-bold">
-              <i class="fa-solid fa-receipt"></i> Slip
-            </button>
-            <button onclick="toggleCartDrawer(true)" class="relative p-2.5 rounded-xl bg-navy-900 text-white hover:bg-navy-800 transition">
-              <i class="fa-solid fa-cart-flatbed"></i>
-              <span id="mobileCartBadge" class="absolute -top-1.5 -right-1.5 bg-orange-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">0</span>
-            </button>
           </div>
+          <span class="lg:hidden text-[11px] font-semibold bg-slate-800 text-slate-300 px-2.5 py-1 rounded-lg">Peshawar Branch</span>
         </div>
 
-        <!-- Global Optical Search Bar -->
-        <div class="flex-1 max-w-xl">
-          <div class="flex items-center bg-slate-100 border border-slate-200 focus-within:border-navy-800 focus-within:bg-white focus-within:ring-2 focus-within:ring-navy-800/10 rounded-xl overflow-hidden transition">
-            <select id="categoryFilter" onchange="applyFilters()" aria-label="Category Filter" class="bg-transparent text-xs sm:text-sm font-semibold text-slate-700 pl-3.5 pr-2 py-2.5 border-r border-slate-200 focus:outline-none cursor-pointer max-w-[130px] sm:max-w-[165px]">
-              <option value="All">All Optical</option>
-              <option value="Frames">Eyeglass Frames</option>
-              <option value="Lenses">Optical Lenses</option>
-              <option value="Sunglasses">Sunglasses</option>
-              <option value="Contact Lenses">Contact Lenses</option>
-              <option value="Equipment">Clinic Equipment</option>
-            </select>
-            <input
-              type="text"
-              id="searchInput"
-              oninput="applyFilters()"
-              placeholder="Search titanium frames, blue-cut lenses, progressive..."
-              class="w-full bg-transparent px-3.5 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:outline-none"
-            />
-            <button onclick="applyFilters()" class="bg-navy-900 hover:bg-navy-800 text-white px-4 py-2.5 text-sm font-semibold transition flex items-center gap-1.5 shrink-0">
-              <i class="fa-solid fa-magnifying-glass"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- Mode Switcher & Bulk Order Cart -->
-        <div class="flex items-center justify-between lg:justify-end gap-2">
-          <div class="inline-flex p-1 bg-slate-100 rounded-xl border border-slate-200 w-full sm:w-auto overflow-x-auto">
-            <button
-              id="tabBuyer"
-              onclick="switchView('marketplace')"
-              class="flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 bg-white text-navy-900 shadow-sm shrink-0"
-            >
-              <i class="fa-solid fa-store text-orange-500"></i> Wholesale Catalog
-            </button>
-            <button
-              id="tabInvoice"
-              onclick="switchView('invoiceSlip')"
-              class="flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 text-slate-600 hover:text-navy-900 shrink-0"
-            >
-              <i class="fa-solid fa-file-invoice text-amber-600"></i> Rx & Invoice Slip
-            </button>
-            <button
-              id="tabRfq"
-              onclick="switchView('rfqFeed')"
-              class="flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 text-slate-600 hover:text-navy-900 shrink-0"
-            >
-              <i class="fa-solid fa-file-signature text-indigo-600"></i> RFQs
-              <span id="rfqCountBadge" class="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-1.5 py-0.5 rounded-full">3</span>
-            </button>
-            <button
-              id="tabSeller"
-              onclick="switchView('sellerHub')"
-              class="flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 text-slate-600 hover:text-navy-900 shrink-0"
-            >
-              <i class="fa-solid fa-plus-circle text-emerald-600"></i> Add Stock
-            </button>
-          </div>
+        <!-- Primary Navigation Links -->
+        <nav class="p-3 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-1 gap-1.5">
+          <button
+            id="navNewInvoice"
+            onclick="switchSection('newInvoice')"
+            class="nav-item active flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs sm:text-sm font-bold bg-amber-400 text-slate-950 shadow-sm transition text-left"
+          >
+            <i class="fa-solid fa-file-invoice w-4 text-center"></i>
+            <span>New Invoice & Rx</span>
+          </button>
 
           <button
-            onclick="toggleCartDrawer(true)"
-            class="hidden lg:flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2.5 rounded-xl text-xs font-extrabold shadow-sm transition shrink-0"
+            id="navLedger"
+            onclick="switchSection('ledger')"
+            class="nav-item flex items-center justify-between gap-2 px-3.5 py-3 rounded-xl text-xs sm:text-sm font-semibold text-slate-300 hover:bg-slate-900 hover:text-white transition text-left"
           >
-            <i class="fa-solid fa-cart-flatbed"></i>
-            <span>Order</span>
-            <span id="desktopCartBadge" class="bg-navy-900 text-white text-[11px] font-bold px-2 py-0.5 rounded-full">0</span>
-          </button>
-        </div>
-
-      </div>
-    </div>
-  </header>
-
-  <!-- ==================== VIEW 1: B2B OPTICAL MARKETPLACE ==================== -->
-  <main id="viewMarketplace" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-
-    <!-- Optical B2B Banner -->
-    <section class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-navy-950 via-navy-900 to-navy-800 text-white p-6 sm:p-8 shadow-lg border border-slate-800">
-      <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-        <div class="lg:col-span-8 space-y-3">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-semibold text-amber-300">
-            <i class="fa-solid fa-eye"></i> Direct Optical Factory & Clinic Wholesale
-          </div>
-          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight">
-            Source Frames, Precision Lenses & Issue <span class="text-amber-300">Official Cambridge Rx Invoices</span>
-          </h1>
-          <p class="text-slate-300 text-sm sm:text-base max-w-2xl">
-            Order bulk optical inventory with tiered factory discounts, or generate an itemized Cambridge Opticians customer/wholesale prescription slip with automatic Balance calculation.
-          </p>
-          <div class="pt-2 flex flex-wrap items-center gap-3">
-            <button onclick="switchView('invoiceSlip')" class="bg-amber-400 hover:bg-amber-300 text-navy-950 font-extrabold px-5 py-2.5 rounded-xl text-sm shadow-md transition flex items-center gap-2">
-              <i class="fa-solid fa-receipt"></i> Open Cambridge Rx Invoice Card
-            </button>
-            <button onclick="openRfqModal()" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-semibold px-5 py-2.5 rounded-xl text-sm transition flex items-center gap-2">
-              <i class="fa-solid fa-paper-plane"></i> Post Bulk Lens/Frame RFQ
-            </button>
-          </div>
-        </div>
-
-        <div class="lg:col-span-4 grid grid-cols-2 gap-3">
-          <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4">
-            <div class="text-2xl font-extrabold text-amber-300">1-Click</div>
-            <div class="text-xs text-slate-300 mt-0.5">Cambridge Slip Sync</div>
-          </div>
-          <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4">
-            <div class="text-2xl font-extrabold text-emerald-400">Up to 40%</div>
-            <div class="text-xs text-slate-300 mt-0.5">Bulk Box Discounts</div>
-          </div>
-          <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4">
-            <div class="text-2xl font-extrabold text-white">Rx Ready</div>
-            <div class="text-xs text-slate-300 mt-0.5">Sph / Cyl / Axis / PD</div>
-          </div>
-          <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4">
-            <div id="heroProductCount" class="text-2xl font-extrabold text-white">8</div>
-            <div class="text-xs text-slate-300 mt-0.5">Wholesale Optical SKUs</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Quick Filter Pills & Sort Controls -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm">
-      <div id="quickFilterContainer" class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
-        <button onclick="setQuickFilter('all')" data-filter="all" class="quick-pill active px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-navy-900 text-white transition shrink-0">
-          All Optical Stock
-        </button>
-        <button onclick="setQuickFilter('verified')" data-filter="verified" class="quick-pill px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition shrink-0 flex items-center gap-1.5">
-          <i class="fa-solid fa-circle-check text-emerald-600"></i> Verified Optical Labs
-        </button>
-        <button onclick="setQuickFilter('lowMoq')" data-filter="lowMoq" class="quick-pill px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition shrink-0">
-          Low MOQ (&le; 20 pcs)
-        </button>
-        <button onclick="setQuickFilter('readyToShip')" data-filter="readyToShip" class="quick-pill px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition shrink-0">
-          <i class="fa-solid fa-truck-fast text-orange-500"></i> In-Stock Dispatch
-        </button>
-        <button onclick="setQuickFilter('customOem')" data-filter="customOem" class="quick-pill px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition shrink-0">
-          Custom Branding / Lab Rx
-        </button>
-      </div>
-
-      <div class="flex items-center gap-2 shrink-0">
-        <span class="text-xs text-slate-500 font-medium">Sort:</span>
-        <select id="sortSelect" onchange="applyFilters()" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-semibold text-slate-700 focus:outline-none focus:border-navy-800">
-          <option value="featured">Featured Optical Suppliers</option>
-          <option value="priceLow">Lowest Unit Price (Rs.)</option>
-          <option value="moqLow">Lowest MOQ First</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Results Count Bar -->
-    <div class="flex items-center justify-between text-xs text-slate-500 px-1">
-      <p>Showing <strong id="visibleCount" class="text-slate-900">0</strong> wholesale optical listings</p>
-      <button onclick="resetAllFilters()" id="resetFilterBtn" class="hidden text-orange-600 hover:underline font-semibold">Reset Filters</button>
-    </div>
-
-    <!-- Product Grid -->
-    <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-      <!-- Populated dynamically via JS -->
-    </div>
-
-    <!-- Empty State -->
-    <div id="emptyState" class="hidden bg-white rounded-2xl border border-slate-200 p-12 text-center space-y-3">
-      <div class="w-14 h-14 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto text-2xl">
-        <i class="fa-solid fa-glasses"></i>
-      </div>
-      <h3 class="text-lg font-bold text-slate-900">No matching optical products found</h3>
-      <p class="text-sm text-slate-500 max-w-md mx-auto">Clear your filters or post an RFQ for custom optical lenses and frames.</p>
-      <div class="pt-2 flex justify-center gap-3">
-        <button onclick="resetAllFilters()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold transition">Clear Filters</button>
-        <button onclick="openRfqModal()" class="px-4 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold transition">Post an RFQ</button>
-      </div>
-    </div>
-
-  </main>
-
-  <!-- ==================== VIEW 2: CAMBRIDGE OPTICIANS OFFICIAL INVOICE & RX SLIP ==================== -->
-  <section id="viewInvoiceSlip" class="hidden max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-5">
-
-    <!-- Top Control Bar for the Invoice -->
-    <div class="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-      <div>
-        <div class="flex items-center gap-2">
-          <span class="bg-amber-100 text-navy-900 text-xs font-extrabold px-2.5 py-0.5 rounded-md">Official Receipt Layout</span>
-          <span class="text-xs text-slate-500">Click any field on the slip below to edit directly</span>
-        </div>
-        <h2 class="text-lg sm:text-xl font-extrabold text-navy-900 mt-1">Cambridge Opticians — Order & Prescription Invoice</h2>
-      </div>
-
-      <div class="flex flex-wrap items-center gap-2.5">
-        <button onclick="resetInvoiceForm()" class="px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex items-center gap-1.5">
-          <i class="fa-solid fa-rotate-right"></i> New Slip (#<span id="nextSlipPreview">1001</span>)
-        </button>
-        <button onclick="window.print()" class="px-5 py-2.5 rounded-xl bg-navy-900 hover:bg-navy-800 text-white text-xs sm:text-sm font-extrabold shadow-md transition flex items-center gap-2">
-          <i class="fa-solid fa-print text-amber-300"></i> Print Invoice Slip
-        </button>
-      </div>
-    </div>
-
-    <!-- THE AUTHENTIC CAMBRIDGE OPTICIANS MANILA/CREAM RECEIPT CARD -->
-    <div class="overflow-x-auto pb-4">
-      <div id="printableCambridgeSlip" class="cambridge-paper min-w-[760px] max-w-4xl mx-auto rounded-lg border-2 border-[#1A2744]/80 p-6 sm:p-8 select-none">
-
-        <!-- 1. TOP HEADER ROW: Serial # | CAMBRIDGE [Glasses] Opticians | QR Code -->
-        <div class="flex items-center justify-between gap-4 pb-4">
-          <!-- Left: Serial Number -->
-          <div class="flex flex-col items-start">
-            <span class="text-[10px] font-bold uppercase tracking-widest text-[#1A2744]/60">Receipt No.</span>
-            <input
-              type="text"
-              id="invSerialNo"
-              value="1000"
-              aria-label="Receipt Serial Number"
-              class="font-monoStamp text-2xl sm:text-3xl font-bold text-[#1A2744] bg-transparent w-28 focus:outline-none focus:bg-white/40 rounded px-1 tracking-wider"
-            />
-          </div>
-
-          <!-- Center: Brand Wordmark & Eyeglasses SVG -->
-          <div class="flex items-center justify-center gap-3 flex-wrap">
-            <span class="text-3xl sm:text-4xl font-black tracking-tight text-[#1A2744]" style="letter-spacing: 0.02em;">CAMBRIDGE</span>
-            <!-- Custom Eyeglasses Vector Matching the Card -->
-            <svg class="w-16 h-8 sm:w-20 sm:h-9 text-[#1A2744] shrink-0" viewBox="0 0 140 54" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <!-- Temple arms folded/angled slightly above -->
-              <path d="M12 18L32 7H46" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M128 18L108 7H94" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <!-- Left Rim -->
-              <path d="M10 21C10 18.7909 11.7909 17 14 17H54C56.2091 17 58 18.7909 58 21V34C58 41.732 51.732 48 44 48H24C16.268 48 10 41.732 10 34V21Z" stroke="currentColor" stroke-width="5"/>
-              <!-- Nose Bridge -->
-              <path d="M58 23C63 19.5 77 19.5 82 23" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
-              <!-- Right Rim -->
-              <path d="M82 21C82 18.7909 83.7909 17 86 17H126C128.209 17 130 18.7909 130 21V34C130 41.732 123.732 48 116 48H96C88.268 48 82 41.732 82 34V21Z" stroke="currentColor" stroke-width="5"/>
-            </svg>
-            <span class="text-2xl sm:text-3xl font-extrabold text-[#1A2744] tracking-tight">Opticians</span>
-          </div>
-
-          <!-- Right: Crisp Scannable-Style QR Code SVG -->
-          <div class="shrink-0 p-1 bg-transparent" title="Cambridge Opticians Digital Verification QR">
-            <svg class="w-16 h-16 sm:w-20 sm:h-20 text-[#1A2744]" viewBox="0 0 100 100" fill="currentColor">
-              <!-- Top-left finder -->
-              <path d="M6 6h28v28H6V6zm5 5v18h18V11H11zm4 4h10v10H15V15z"/>
-              <!-- Top-right finder -->
-              <path d="M66 6h28v28H66V6zm5 5v18h18V11H71zm4 4h10v10H75V15z"/>
-              <!-- Bottom-left finder -->
-              <path d="M6 66h28v28H6V66zm5 5v18h18V71H11zm4 4h10v10H15V75z"/>
-              <!-- Data modules -->
-              <rect x="40" y="8" width="5" height="5"/>
-              <rect x="50" y="8" width="10" height="5"/>
-              <rect x="40" y="18" width="10" height="5"/>
-              <rect x="55" y="18" width="5" height="10"/>
-              <rect x="40" y="28" width="5" height="10"/>
-              <rect x="8" y="40" width="10" height="5"/>
-              <rect x="23" y="40" width="5" height="10"/>
-              <rect x="33" y="45" width="12" height="5"/>
-              <rect x="50" y="40" width="10" height="10"/>
-              <rect x="65" y="40" width="5" height="15"/>
-              <rect x="75" y="45" width="10" height="5"/>
-              <rect x="89" y="40" width="5" height="15"/>
-              <rect x="13" y="52" width="15" height="5"/>
-              <rect x="40" y="55" width="5" height="10"/>
-              <rect x="50" y="55" width="10" height="5"/>
-              <rect x="75" y="55" width="10" height="10"/>
-              <rect x="40" y="70" width="15" height="5"/>
-              <rect x="60" y="66" width="5" height="12"/>
-              <rect x="70" y="70" width="10" height="5"/>
-              <rect x="85" y="66" width="9" height="9"/>
-              <rect x="40" y="80" width="5" height="14"/>
-              <rect x="50" y="84" width="15" height="5"/>
-              <rect x="70" y="82" width="12" height="12"/>
-              <rect x="88" y="82" width="6" height="12"/>
-            </svg>
-          </div>
-        </div>
-
-        <!-- 2. CUSTOMER / BUYER LINE: Name | Mob No | Date -->
-        <div class="grid grid-cols-12 gap-3 items-end py-3 text-sm sm:text-base font-bold">
-          <div class="col-span-5 flex items-end gap-1.5">
-            <span class="shrink-0">Name:</span>
-            <input type="text" id="invCustomerName" placeholder="Buyer / Patient Name" class="receipt-line-input w-full text-sm" />
-          </div>
-          <div class="col-span-4 flex items-end gap-1.5">
-            <span class="shrink-0">Mob No:</span>
-            <input type="text" id="invCustomerPhone" placeholder="03XX-XXXXXXX" class="receipt-line-input w-full text-sm" />
-          </div>
-          <div class="col-span-3 flex items-end gap-1.5">
-            <span class="shrink-0">Date:</span>
-            <input type="text" id="invDate" class="receipt-line-input w-full text-sm text-center" />
-          </div>
-        </div>
-
-        <!-- 3. OPTICAL PRESCRIPTION TABLE (Exact 3-Row x 9-Column Grid) -->
-        <div class="mt-3 mb-5">
-          <div class="grid grid-cols-12 gap-3">
-            <!-- Left Eye / Distance-Near Label Box + Right Eye (4 cols) -->
-            <div class="col-span-7 border-[1.5px] border-[#1A2744]">
-              <table class="w-full border-collapse text-center text-xs sm:text-sm font-bold">
-                <thead>
-                  <tr class="border-b-[1.5px] border-[#1A2744]">
-                    <th class="w-28 py-2 px-2 border-r-[1.5px] border-[#1A2744] text-left"></th>
-                    <th class="py-2 border-r-[1.5px] border-[#1A2744]">Sph</th>
-                    <th class="py-2 border-r-[1.5px] border-[#1A2744]">Cyl</th>
-                    <th class="py-2 border-r-[1.5px] border-[#1A2744]">Axis</th>
-                    <th class="py-2">RVA</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr class="border-b-[1.5px] border-[#1A2744]">
-                    <td class="py-2.5 px-2.5 border-r-[1.5px] border-[#1A2744] text-left font-extrabold">Distance</td>
-                    <td class="border-r-[1.5px] border-[#1A2744]"><input type="text" id="rx_r_dist_sph" placeholder="-1.25" class="rx-grid-input" /></td>
-                    <td class="border-r-[1.5px] border-[#1A2744]"><input type="text" id="rx_r_dist_cyl" placeholder="-0.50" class="rx-grid-input" /></td>
-                    <td class="border-r-[1.5px] border-[#1A2744]"><input type="text" id="rx_r_dist_axis" placeholder="180" class="rx-grid-input" /></td>
-                    <td><input type="text" id="rx_r_dist_rva" placeholder="6/6" class="rx-grid-input" /></td>
-                  </tr>
-                  <tr>
-                    <td class="py-2.5 px-2.5 border-r-[1.5px] border-[#1A2744] text-left font-extrabold">Near (Add)</td>
-                    <td class="border-r-[1.5px] border-[#1A2744]"><input type="text" id="rx_r_near_sph" placeholder="+1.50" class="rx-grid-input" /></td>
-                    <td class="border-r-[1.5px] border-[#1A2744]"><input type="text" id="rx_r_near_cyl" class="rx-grid-input" /></td>
-                    <td class="border-r-[1.5px] border-[#1A2744]"><input type="text" id="rx_r_near_axis" class="rx-grid-input" /></td>
-                    <td><input type="text" id="rx_r_near_rva" placeholder="N6" class="rx-grid-input" /></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <!-- Second 4-Column Rx Block (Left Eye) -->
-            <div class="col-span-5 border-[1.5px] border-[#1A2744]">
-              <table class="w-full border-collapse text-center text-xs sm:text-sm font-bold">
-                <thead>
-                  <tr class="border-b-[1.5px] border-[#1A2744]">
-                    <th class="py-2 border-r-[1.5px] border-[#1A2744]">Sph</th>
-                    <th class="py-2 border-r-[1.5px] border-[#1A2744]">Cyl</th>
-                    <th class="py-2 border-r-[1.5px] border-[#1A2744]">Axis</th>
-                    <th class="py-2">RVA</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr class="border-b-[1.5px] border-[#1A2744]">
-                    <td class="py-2.5 border-r-[1.5px] border-[#1A2744]"><input type="text" id="rx_l_dist_sph" placeholder="-1.00" class="rx-grid-input" /></td>
-                    <td class="border-r-[1.5px] border-[#1A2744]"><input type="text" id="rx_l_dist_cyl" placeholder="-0.25" class="rx-grid-input" /></td>
-                    <td class="border-r-[1.5px] border-[#1A2744]"><input type="text" id="rx_l_dist_axis" placeholder="90" class="rx-grid-input" /></td>
-                    <td><input type="text" id="rx_l_dist_rva" placeholder="6/6" class="rx-grid-input" /></td>
-                  </tr>
-                  <tr>
-                    <td class="py-2.5 border-r-[1.5px] border-[#1A2744]"><input type="text" id="rx_l_near_sph" placeholder="+1.50" class="rx-grid-input" /></td>
-                    <td class="border-r-[1.5px] border-[#1A2744]"><input type="text" id="rx_l_near_cyl" class="rx-grid-input" /></td>
-                    <td class="border-r-[1.5px] border-[#1A2744]"><input type="text" id="rx_l_near_axis" class="rx-grid-input" /></td>
-                    <td><input type="text" id="rx_l_near_rva" placeholder="N6" class="rx-grid-input" /></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <!-- 4. PD & SEGMENT HEIGHT MEASUREMENTS ROW -->
-        <div class="flex flex-wrap items-end justify-between gap-4 py-2 text-xs sm:text-sm font-bold">
-          <div class="flex items-end gap-1">
-            <span>R-PD:</span>
-            <input type="text" id="invRpd" placeholder="32" class="receipt-line-input w-20 text-center" />
-            <span>mm</span>
-          </div>
-
-          <div class="flex items-end gap-1">
-            <span>L-PD:</span>
-            <input type="text" id="invLpd" placeholder="31.5" class="receipt-line-input w-20 text-center" />
-            <span>mm</span>
-          </div>
-
-          <div class="flex items-end gap-1">
-            <span>Height:</span>
-            <input type="text" id="invHeight" placeholder="18" class="receipt-line-input w-24 text-center" />
-            <span>mm above lower rim</span>
-          </div>
-        </div>
-
-        <!-- 5. FRAME & LANCES (LENSES) ITEMIZED LINES -->
-        <div class="space-y-4 mt-4 text-xs sm:text-sm font-bold">
-          <div class="flex items-end gap-2">
-            <span class="w-16 shrink-0">Frame:</span>
-            <input type="text" id="invFrameDesc" placeholder="Titanium Rimless / Acetate Bulk Frame..." class="receipt-line-input flex-1" />
-            <span class="shrink-0 pl-2">Rs.</span>
-            <input type="number" id="invFrameRs" value="0" oninput="recalculateInvoiceTotals()" class="receipt-line-input w-32 text-right font-extrabold" />
-          </div>
-
-          <div class="flex items-end gap-2">
-            <span class="w-16 shrink-0">Lances:</span>
-            <input type="text" id="invLensesDesc" placeholder="Blue-Cut Anti-Glare / Progressive Rx Lenses..." class="receipt-line-input flex-1" />
-            <span class="shrink-0 pl-2">Rs.</span>
-            <input type="number" id="invLensesRs" value="0" oninput="recalculateInvoiceTotals()" class="receipt-line-input w-32 text-right font-extrabold" />
-          </div>
-        </div>
-
-        <!-- 6. FINANCIAL TOTALS (LEFT) & EXAMINED BY / DELIVERY / SIGNATURE (RIGHT) -->
-        <div class="grid grid-cols-12 gap-6 mt-7 mb-6 text-xs sm:text-sm font-bold">
-          <!-- Left Financial Column (Total, Advance, Balance) -->
-          <div class="col-span-6 space-y-4">
-            <div class="flex items-end gap-2">
-              <span class="w-24 shrink-0">Total: Rs.</span>
-              <input type="number" id="invTotalRs" readonly value="0" class="receipt-line-input w-44 text-right font-black text-base" />
-            </div>
-
-            <div class="flex items-end gap-2">
-              <span class="w-24 shrink-0">Advance: Rs.</span>
-              <input type="number" id="invAdvanceRs" value="0" oninput="recalculateInvoiceTotals()" class="receipt-line-input w-44 text-right font-extrabold text-emerald-900" />
-            </div>
-
-            <div class="flex items-end gap-2">
-              <span class="w-24 shrink-0">Balance: Rs.</span>
-              <input type="number" id="invBalanceRs" readonly value="0" class="receipt-line-input w-44 text-right font-black text-base text-rose-900" />
-            </div>
-          </div>
-
-          <!-- Right Sign-off Column (Examined By, Delivery Date, Signature) -->
-          <div class="col-span-6 space-y-4">
-            <div class="flex items-end gap-2">
-              <span class="w-28 shrink-0">Examined By:</span>
-              <input type="text" id="invExaminedBy" placeholder="Optometrist / Sales Officer" class="receipt-line-input flex-1" />
-            </div>
-
-            <div class="flex items-end gap-2">
-              <span class="w-28 shrink-0">Delivery Date:</span>
-              <input type="text" id="invDeliveryDate" class="receipt-line-input flex-1" />
-            </div>
-
-            <div class="flex items-end gap-2">
-              <span class="w-28 shrink-0">Signature:</span>
-              <input type="text" id="invSignature" placeholder="Authorized Stamp / Sign" class="receipt-line-input flex-1 italic" />
-            </div>
-          </div>
-        </div>
-
-        <!-- 7. HORIZONTAL DIVIDER & PESHAWAR BRANCH FOOTER -->
-        <div class="border-t-2 border-[#1A2744] pt-3.5 mt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <!-- Left: Exact Location Address -->
-          <div class="flex items-start gap-2.5">
-            <i class="fa-solid fa-location-dot text-2xl text-[#1A2744] mt-0.5"></i>
-            <div class="text-sm sm:text-base font-extrabold leading-tight text-[#1A2744]">
-              <div>Shakeel Plaza, University Road,</div>
-              <div>Opp: Islamia College Peshawar</div>
-            </div>
-          </div>
-
-          <!-- Right: Phone & WhatsApp Contact Numbers -->
-          <div class="flex items-center gap-3 text-sm sm:text-base font-extrabold text-[#1A2744]">
-            <div class="flex flex-col items-center gap-1.5">
-              <span class="w-6 h-6 rounded-full border-[1.5px] border-[#1A2744] flex items-center justify-center text-xs">
-                <i class="fa-solid fa-phone"></i>
-              </span>
-              <span class="w-6 h-6 rounded-full border-[1.5px] border-[#1A2744] flex items-center justify-center text-sm">
-                <i class="fa-brands fa-whatsapp"></i>
-              </span>
-            </div>
-            <div class="leading-snug tracking-tight">
-              <div>091-5853091</div>
-              <div>0312-9994625</div>
-              <div>0300-5896201</div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ==================== VIEW 3: BUYER RFQ BOARD ==================== -->
-  <section id="viewRfqFeed" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-      <div>
-        <span class="text-xs font-bold uppercase tracking-wider text-indigo-600">Optical Sourcing Board</span>
-        <h2 class="text-2xl font-extrabold text-navy-900 mt-0.5">Bulk Optical Requests for Quotation (RFQs)</h2>
-        <p class="text-sm text-slate-500 mt-1">Active clinic & optical shop procurement requests. Suppliers can submit direct factory quotes.</p>
-      </div>
-      <button onclick="openRfqModal()" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-5 py-3 rounded-xl text-sm shadow-sm transition flex items-center gap-2 shrink-0">
-        <i class="fa-solid fa-plus"></i> Post Optical RFQ
-      </button>
-    </div>
-
-    <div id="rfqGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-      <!-- Populated dynamically via JS -->
-    </div>
-  </section>
-
-  <!-- ==================== VIEW 4: SELLER HUB (ADD OPTICAL PRODUCTS) ==================== -->
-  <section id="viewSellerHub" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-
-      <!-- Left Column: Quick Add Optical Product Form -->
-      <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">
-        <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
-          <div>
-            <span class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg">
-              <i class="fa-solid fa-circle-check"></i> Optical Supplier Portal
+            <span class="flex items-center gap-3">
+              <i class="fa-solid fa-book-open w-4 text-center text-sky-400"></i>
+              <span>Invoices & Ledger</span>
             </span>
-            <h2 class="text-xl sm:text-2xl font-extrabold text-navy-900 mt-2">Add Wholesale Frame or Lens SKU</h2>
-            <p class="text-xs sm:text-sm text-slate-500">Publish directly to the Cambridge Opticians B2B catalog with tiered pricing in Rs.</p>
-          </div>
-        </div>
-
-        <form id="sellerProductForm" onsubmit="handleAddProduct(event)" class="space-y-5">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div class="sm:col-span-2">
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Product Title *</label>
-              <input type="text" id="prodTitle" required placeholder="e.g., Japanese Beta-Titanium Rimless Frame Series" class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm focus:outline-none focus:border-navy-800" />
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Optical Category *</label>
-              <select id="prodCategory" class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm bg-white focus:outline-none focus:border-navy-800">
-                <option value="Frames">Eyeglass Frames</option>
-                <option value="Lenses">Optical Lenses</option>
-                <option value="Sunglasses">Sunglasses</option>
-                <option value="Contact Lenses">Contact Lenses</option>
-                <option value="Equipment">Clinic Equipment</option>
-              </select>
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Minimum Order Qty (MOQ) *</label>
-              <input type="number" id="prodMoq" min="1" value="12" required class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm focus:outline-none focus:border-navy-800" />
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Manufacturer / Lab Name *</label>
-              <input type="text" id="prodSupplier" required placeholder="e.g., Cambridge Optical Lab / Essilor Partner" class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm focus:outline-none focus:border-navy-800" />
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Origin / Warehouse *</label>
-              <input type="text" id="prodLocation" required placeholder="e.g., Peshawar, PK or Wenzhou, CN" class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm focus:outline-none focus:border-navy-800" />
-            </div>
-          </div>
-
-          <!-- 3-Tier Wholesale Pricing Box -->
-          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold uppercase tracking-wider text-navy-900">Tiered Bulk Unit Pricing (Rs.) *</span>
-              <span class="text-[11px] text-slate-500">Higher box qty = lower unit rate</span>
-            </div>
-            <div class="grid grid-cols-3 gap-3">
-              <div>
-                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Tier 1 (MOQ+)</label>
-                <div class="relative">
-                  <span class="absolute left-2.5 top-2 text-slate-400 text-xs font-bold">Rs</span>
-                  <input type="number" step="1" min="1" id="priceTier1" value="1800" required class="w-full rounded-lg border border-slate-200 pl-8 pr-2.5 py-1.5 text-sm font-semibold" />
-                </div>
-              </div>
-              <div>
-                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Tier 2 (50+)</label>
-                <div class="relative">
-                  <span class="absolute left-2.5 top-2 text-slate-400 text-xs font-bold">Rs</span>
-                  <input type="number" step="1" min="1" id="priceTier2" value="1450" required class="w-full rounded-lg border border-slate-200 pl-8 pr-2.5 py-1.5 text-sm font-semibold" />
-                </div>
-              </div>
-              <div>
-                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Tier 3 (150+)</label>
-                <div class="relative">
-                  <span class="absolute left-2.5 top-2 text-slate-400 text-xs font-bold">Rs</span>
-                  <input type="number" step="1" min="1" id="priceTier3" value="1150" required class="w-full rounded-lg border border-slate-200 pl-8 pr-2.5 py-1.5 text-sm font-semibold text-emerald-700" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Real Image Preset Picker + Custom URL -->
-          <div class="space-y-2.5">
-            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Select Real Optical Product Photo or Enter URL</label>
-            <div id="imagePresetGrid" class="grid grid-cols-4 sm:grid-cols-6 gap-2">
-              <!-- Populated via JS -->
-            </div>
-            <input type="url" id="prodImageUrl" required placeholder="https://images.unsplash.com/..." class="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-xs text-slate-600 focus:outline-none focus:border-navy-800" />
-          </div>
-
-          <!-- Capabilities Checkboxes -->
-          <div class="flex flex-wrap gap-4 pt-1">
-            <label class="inline-flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
-              <input type="checkbox" id="prodVerified" checked class="rounded text-navy-800 focus:ring-0 w-4 h-4" />
-              Verified Optical Lab
-            </label>
-            <label class="inline-flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
-              <input type="checkbox" id="prodReady" checked class="rounded text-navy-800 focus:ring-0 w-4 h-4" />
-              In-Stock Dispatch
-            </label>
-            <label class="inline-flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
-              <input type="checkbox" id="prodOem" checked class="rounded text-navy-800 focus:ring-0 w-4 h-4" />
-              Custom Branding / Lab Rx
-            </label>
-          </div>
-
-          <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3.5 rounded-xl text-sm shadow-md transition flex items-center justify-center gap-2">
-            <i class="fa-solid fa-rocket"></i> Publish Optical SKU to Live Catalog
+            <span id="sidebarLedgerBadge" class="bg-slate-800 text-slate-200 text-[11px] font-bold px-2 py-0.5 rounded-full">0</span>
           </button>
-        </form>
+
+          <button
+            id="navInventory"
+            onclick="switchSection('inventory')"
+            class="nav-item flex items-center justify-between gap-2 px-3.5 py-3 rounded-xl text-xs sm:text-sm font-semibold text-slate-300 hover:bg-slate-900 hover:text-white transition text-left"
+          >
+            <span class="flex items-center gap-3">
+              <i class="fa-solid fa-boxes-stacked w-4 text-center text-emerald-400"></i>
+              <span>Inventory & Stock</span>
+            </span>
+            <span id="sidebarStockBadge" class="bg-slate-800 text-slate-200 text-[11px] font-bold px-2 py-0.5 rounded-full">0</span>
+          </button>
+
+          <button
+            id="navCustomers"
+            onclick="switchSection('customers')"
+            class="nav-item flex items-center justify-between gap-2 px-3.5 py-3 rounded-xl text-xs sm:text-sm font-semibold text-slate-300 hover:bg-slate-900 hover:text-white transition text-left"
+          >
+            <span class="flex items-center gap-3">
+              <i class="fa-solid fa-address-book w-4 text-center text-purple-400"></i>
+              <span>Customer Rx Records</span>
+            </span>
+            <span id="sidebarCustomerBadge" class="bg-slate-800 text-slate-200 text-[11px] font-bold px-2 py-0.5 rounded-full">0</span>
+          </button>
+        </nav>
       </div>
 
-      <!-- Right Column: Active Optical Inventory Manager -->
-      <div class="lg:col-span-5 space-y-4">
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-          <div class="flex items-center justify-between mb-4">
-            <div>
-              <h3 class="text-lg font-extrabold text-navy-900">Active Optical Inventory</h3>
-              <p class="text-xs text-slate-500">Live wholesale frames, lenses & equipment</p>
-            </div>
-            <span id="sellerCatalogCount" class="bg-navy-900 text-white text-xs font-bold px-2.5 py-1 rounded-lg">0 SKUs</span>
-          </div>
-
-          <div id="sellerInventoryList" class="space-y-3 max-h-[560px] overflow-y-auto pr-1">
-            <!-- Populated dynamically via JS -->
-          </div>
+      <!-- Branch Footer Info inside Sidebar -->
+      <div class="hidden lg:block p-4 m-3 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2 text-xs">
+        <div class="font-bold text-amber-300 flex items-center gap-1.5">
+          <i class="fa-solid fa-location-dot"></i> Main Branch
+        </div>
+        <p class="text-slate-400 leading-relaxed">
+          Shakeel Plaza, University Road, Opp: Islamia College Peshawar
+        </p>
+        <div class="pt-1.5 border-t border-slate-800 text-[11px] text-slate-400 space-y-0.5 font-mono">
+          <div>Tel: 091-5853091</div>
+          <div>Mob: 0312-9994625</div>
+          <div>WA : 0300-5896201</div>
         </div>
       </div>
+    </aside>
 
-    </div>
-  </section>
+    <!-- ==================== MAIN WORKSPACE AREA ==================== -->
+    <div class="flex-1 flex flex-col min-w-0">
 
-  <!-- ==================== PRODUCT DETAIL & BULK TIER CALCULATOR MODAL ==================== -->
-  <div id="productModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/60 backdrop-blur-sm p-4 overflow-y-auto">
-    <div class="bg-white rounded-2xl max-w-3xl w-full shadow-2xl border border-slate-200 overflow-hidden my-auto">
-      <div class="flex items-center justify-between px-6 py-4 bg-slate-50 border-b border-slate-200">
-        <div class="flex items-center gap-2">
-          <span id="modalCategoryBadge" class="text-xs font-bold px-2.5 py-1 rounded-lg bg-navy-900 text-white">Frames</span>
-          <span id="modalVerifiedBadge" class="text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg flex items-center gap-1">
-            <i class="fa-solid fa-circle-check"></i> Verified Optical Supplier
-          </span>
-        </div>
-        <button onclick="closeProductModal()" class="w-8 h-8 rounded-lg hover:bg-slate-200 text-slate-500 flex items-center justify-center transition">
-          <i class="fa-solid fa-xmark text-lg"></i>
-        </button>
-      </div>
-
-      <div class="p-6 grid grid-cols-1 md:grid-cols-12 gap-6">
-        <div class="md:col-span-5 space-y-4">
-          <div class="aspect-square rounded-xl overflow-hidden bg-slate-100 border border-slate-200">
-            <img id="modalImage" src="" alt="Optical Product" onerror="this.src='https://placehold.co/600x600/16284C/FFFFFF?text=Cambridge+Opticians'" class="w-full h-full object-cover" />
+      <!-- TOP BAR WITH BRANCH HEADER, LIVE KPI PILLS & NEW RECEIPT ACTION -->
+      <header class="bg-white border-b border-slate-200 px-4 sm:px-6 py-3.5 sticky top-0 z-30 shadow-2xs">
+        <div class="max-w-7xl mx-auto flex flex-col xl:flex-row xl:items-center justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
+              <h1 class="text-sm sm:text-base font-extrabold text-navy-900 tracking-tight">
+                CAMBRIDGE Opticians — Shakeel Plaza, University Road, Peshawar
+              </h1>
+            </div>
+            <p class="text-xs text-slate-500 mt-0.5">Optical Shop Billing, Prescription (Rx) Management & Balance Ledger</p>
           </div>
 
-          <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-200 space-y-2">
-            <div class="flex items-center justify-between">
-              <span id="modalSupplierName" class="text-xs font-extrabold text-navy-900">Supplier Name</span>
-              <span id="modalSupplierYears" class="text-[11px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded">8 YRS</span>
-            </div>
-            <p id="modalSupplierLoc" class="text-xs text-slate-500"><i class="fa-solid fa-location-dot text-slate-400 mr-1"></i> Location</p>
-            <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200 text-center">
-              <div>
-                <div class="text-xs font-extrabold text-slate-900">99.2%</div>
-                <div class="text-[10px] text-slate-500">Order Accuracy</div>
-              </div>
-              <div>
-                <div class="text-xs font-extrabold text-emerald-600">&le; 1 hr</div>
-                <div class="text-[10px] text-slate-500">Lab Response</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="md:col-span-7 flex flex-col justify-between space-y-4">
-          <div class="space-y-4">
-            <h3 id="modalTitle" class="text-xl font-extrabold text-navy-900 leading-snug">Product Title</h3>
-
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Select Volume Tier or Enter Quantity</label>
-              <div id="modalTierGrid" class="grid grid-cols-3 gap-2.5"></div>
+          <!-- KPI Summary Pills + Quick Reset Button -->
+          <div class="flex flex-wrap items-center gap-2.5">
+            <div class="bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl">
+              <span class="block text-[10px] font-bold uppercase tracking-wider text-emerald-700">Total Billed</span>
+              <span id="kpiTotalSales" class="text-xs sm:text-sm font-black text-emerald-950">Rs. 0</span>
             </div>
 
-            <div class="bg-navy-950 text-white rounded-xl p-4 space-y-3">
-              <div class="flex items-center justify-between gap-3">
-                <div>
-                  <label for="modalQtyInput" class="block text-xs text-slate-400">Order Quantity (Units/Pairs)</label>
-                  <span id="modalMoqHint" class="text-[11px] text-amber-300">Min. Order: 12 units</span>
-                </div>
-                <div class="flex items-center bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
-                  <button type="button" onclick="adjustModalQty(-5)" class="px-3 py-1.5 hover:bg-slate-700 text-sm font-bold">-</button>
-                  <input type="number" id="modalQtyInput" oninput="recalculateModalPrice()" class="w-20 bg-transparent text-center text-sm font-extrabold focus:outline-none" />
-                  <button type="button" onclick="adjustModalQty(5)" class="px-3 py-1.5 hover:bg-slate-700 text-sm font-bold">+</button>
-                </div>
-              </div>
-
-              <div class="border-t border-slate-800 pt-3 flex items-center justify-between">
-                <div>
-                  <span class="text-xs text-slate-400 block">Applied Unit Price</span>
-                  <span id="modalAppliedUnitPrice" class="text-lg font-extrabold text-emerald-400">Rs. 0</span>
-                  <span id="modalSavingsBadge" class="ml-1.5 text-[11px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-semibold">Base Tier</span>
-                </div>
-                <div class="text-right">
-                  <span class="text-xs text-slate-400 block">Estimated Subtotal</span>
-                  <span id="modalTotalPrice" class="text-2xl font-extrabold text-white">Rs. 0</span>
-                </div>
-              </div>
+            <div class="bg-rose-50 border border-rose-200 px-3 py-1.5 rounded-xl">
+              <span class="block text-[10px] font-bold uppercase tracking-wider text-rose-700">Pending Balance</span>
+              <span id="kpiPendingBalance" class="text-xs sm:text-sm font-black text-rose-950">Rs. 0</span>
             </div>
 
-            <div class="space-y-1.5">
-              <label class="block text-xs font-bold text-slate-700">Rx Power / Color Assortment Note (Optional)</label>
-              <input type="text" id="modalCustomNote" placeholder="e.g., Assorted Black/Tortoise or Sph -1.50 to -4.00..." class="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-xs focus:outline-none focus:border-navy-800" />
+            <div class="bg-sky-50 border border-sky-200 px-3 py-1.5 rounded-xl">
+              <span class="block text-[10px] font-bold uppercase tracking-wider text-sky-700">Active Orders</span>
+              <span id="kpiOrderCount" class="text-xs sm:text-sm font-black text-sky-950">0 Slips</span>
             </div>
-          </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2">
-            <button onclick="sendDirectInquiryFromModal()" class="px-4 py-3 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-800 font-bold text-xs sm:text-sm transition flex items-center justify-center gap-2">
-              <i class="fa-regular fa-comment-dots text-navy-800"></i> Message Lab
-            </button>
-            <button onclick="addCurrentModalToCart()" class="px-4 py-3 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs sm:text-sm shadow-md transition flex items-center justify-center gap-2">
-              <i class="fa-solid fa-cart-plus"></i> Add to Bulk Order
+            <button
+              onclick="prepareNewBlankReceipt()"
+              class="bg-navy-900 hover:bg-navy-800 text-amber-300 font-extrabold px-3.5 py-2 rounded-xl text-xs shadow-xs transition flex items-center gap-1.5"
+            >
+              <i class="fa-solid fa-plus"></i> New Blank Receipt (#<span id="topNextSerial">1004</span>)
             </button>
           </div>
         </div>
-      </div>
+      </header>
+
+      <!-- ==================== VIEW 1: NEW INVOICE & RX SLIP (CENTERPIECE) ==================== -->
+      <main id="sectionNewInvoice" class="max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-5">
+
+        <!-- Quick Inventory Pickers & Action Bar -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-2xs flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+          <div class="flex flex-wrap items-center gap-2.5">
+            <span class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Quick Fill from Stock:</span>
+            <select id="quickFrameSelect" onchange="applyQuickInventoryItem('frame')" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:border-navy-800 max-w-[230px]">
+              <option value="">+ Select Frame from Stock...</option>
+            </select>
+            <select id="quickLensSelect" onchange="applyQuickInventoryItem('lens')" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:border-navy-800 max-w-[230px]">
+              <option value="">+ Select Lenses from Stock...</option>
+            </select>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="resetReceiptFormOnly()" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex items-center gap-1.5">
+              <i class="fa-solid fa-eraser"></i> Clear Form
+            </button>
+            <button onclick="window.print()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold transition flex items-center gap-1.5">
+              <i class="fa-solid fa-print text-amber-300"></i> Print Receipt
+            </button>
+            <button onclick="saveCurrentInvoice()" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-extrabold shadow-sm transition flex items-center gap-2">
+              <i class="fa-solid fa-floppy-disk"></i> Save Invoice to Ledger
+            </button>
+          </div>
+        </div>
+
+        <!-- THE EXACT CAMBRIDGE OPTICIANS MANILA/CREAM RECEIPT CARD -->
+        <div class="overflow-x-auto pb-4">
+          <div id="printableCambridgeSlip" class="cambridge-paper min-w-[780px] max-w-4xl mx-auto rounded-lg border-2 border-[#1A2744]/85 p-6 sm:p-8">
+
+            <!-- 1. TOP HEADER ROW: Stamped Serial # | CAMBRIDGE [Glasses] Opticians | QR Code -->
+            <div class="flex items-center justify-between gap-4 pb-4">
+              <!-- Left: Stamped Dark-Ink Serial Number -->
+              <div class="flex flex-col items-start">
+                <span class="no-print-inside-slip text-[10px] font-bold uppercase tracking-widest text-[#1A2744]/60">Serial No.</span>
+                <input
+                  type="text"
+                  id="invSerialNo"
+                  value="1004"
+                  oninput="updateQrSerialBadge()"
+                  aria-label="Receipt Serial Number"
+                  class="font-monoStamp text-2xl sm:text-3xl font-bold text-[#1A2744] bg-transparent w-28 focus:outline-none focus:bg-white/40 rounded px-1 tracking-wider"
+                />
+              </div>
+
+              <!-- Center: Brand Wordmark & Custom Eyeglasses SVG -->
+              <div class="flex items-center justify-center gap-3 flex-wrap">
+                <span class="text-3xl sm:text-4xl font-black tracking-tight text-[#1A2744]" style="letter-spacing: 0.02em;">CAMBRIDGE</span>
+                <svg class="w-16 h-8 sm:w-20 sm:h-9 text-[#1A2744] shrink-0" viewBox="0 0 140 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 18L32 7H46" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M128 18L108 7H94" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M10 21C10 18.7909 11.7909 17 14 17H54C56.2091 17 58 18.7909 58 21V34C58 41.732 51.732 48 44 48H24C16.268 48 10 41.732 10 34V21Z" stroke="currentColor" stroke-width="5"/>
+                  <path d="M58 23C63 19.5 77 19.5 82 23" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+                  <path d="M82 21C82 18.7909 83.7909 17 86 17H126C128.209 17 130 18.7909 130 21V34C130 41.732 123.732 48 116 48H96C88.268 48 82 41.732 82 34V21Z" stroke="currentColor" stroke-width="5"/>
+                </svg>
+                <span class="text-2xl sm:text-3xl font-extrabold text-[#1A2744] tracking-tight">Opticians</span>
+              </div>
+
+              <!-- Right: Clean QR Code SVG -->
+              <div class="shrink-0 p-1 flex flex-col items-center" title="Cambridge Opticians Receipt QR">
+                <svg class="w-16 h-16 sm:w-20 sm:h-20 text-[#1A2744]" viewBox="0 0 100 100" fill="currentColor">
+                  <path d="M6 6h28v28H6V6zm5 5v18h18V11H11zm4 4h10v10H15V15z"/>
+                  <path d="M66 6h28v28H66V6zm5 5v18h18V11H71zm4 4h10v10H75V15z"/>
+                  <path d="M6 66h28v28H6V66zm5 5v18h18V71H11zm4 4h10v10H15V75z"/>
+                  <rect x="40" y="8" width="5" height="5"/>
+                  <rect x="50" y="8" width="10" height="5"/>
+                  <rect x="40" y="18" width="10" height="5"/>
+                  <rect x="55" y="18" width="5" height="10"/>
+                  <rect x="40" y="28" width="5" height="10"/>
+                  <rect x="8" y="40" width="10" height="5"/>
+                  <rect x="23" y="40" width="5" height="10"/>
+                  <rect x="33" y="45" width="12" height="5"/>
+                  <rect x="50" y="40" width="10" height="10"/>
+                  <rect x="65" y="40" width="5" height="15"/>
+                  <rect x="75" y="45" width="10" height="5"/>
+                  <rect x="89" y="40" width="5" height="15"/>
+                  <rect x="13" y="52" width="15" height="5"/>
+                  <rect x="40" y="55" width="5" height="10"/>
+                  <rect x="50" y="55" width="10" height="5"/>
+                  <rect x="75" y="55" width="10" height="10"/>
+                  <rect x="40" y="70" width="15" height="5"/>
+                  <rect x="60" y="66" width="5" height="12"/>
+                  <rect x="70" y="70" width="10" height="5"/>
+                  <rect x="85" y="66" width="9" height="9"/>
+                  <rect x="40" y="80" width="5" height="14"/>
+                  <rect x="50" y="84" width="15" height="5"/>
+                  <rect x="70" y="82" width="12" height="12"/>
+                  <rect x="88" y="82" width="6" height="12"/>
+                </svg>
+              </div>
+            </div>
+
+            <!-- 2. CUSTOMER INFO LINE: Name | Mob No | Date -->
+            <div class="grid grid-cols-12 gap-3 items-end py-3 text-sm sm:text-base font-bold">
+              <div class="col-span-5 flex items-end gap-1.5">
+                <span class="shrink-0">Name:</span>
+                <input type="text" id="invCustomerName" placeholder="Patient / Customer Name" class="receipt-line-input w-full text-sm" />
+              </div>
+              <div class="col-span-4 flex items-end gap-1.5">
+                <span class="shrink-0">Mob No:</span>
+                <input type="text" id="invCustomerPhone" placeholder="03XX-XXXXXXX" class="receipt-line-input w-full text-sm" />
+              </div>
+              <div class="col-span-3 flex items-end gap-1.5">
+                <span class="shrink-0">Date:</span>
+                <input type="text" id="invDate" class="receipt-line-input w-full text-sm text-center" />
+              </div>
+            </div>
+
+            <!-- 3. PRESCRIPTION GRID TABLE (Exact Layout: Distance & Near (Add) | Right Eye OD | Left Eye OS) -->
+            <div class="mt-3 mb-5">
+              <div class="grid grid-cols-12 gap-3">
+                <!-- Left Block: Row Label + Right Eye (OD) -->
+                <div class="col-span-7 border-[1.5px] border-[#1A2744]">
+                  <table class="w-full border-collapse text-center text-xs sm:text-sm font-bold">
+                    <thead>
+                      <tr class="border-b-[1.5px] border-[#1A2744]">
+                        <th class="w-28 py-2 px-2 border-r-[1.5px] border-[#1A2744] text-left"></th>
+                        <th class="py-2 border-r-[1.5px] border-[#1A2744]">Sph</th>
+                        <th class="py-2 border-r-[1.5px] border-[#1A2744]">Cyl</th>
+                        <th class="py-2 border-r-[1.5px] border-[#1A2744]">Axis</th>
+                        <th class="py-2">RVA</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="border-b-[1.5px] border-[#1A2744]">
+                        <td class="py-2.5 px-2.5 border-r-[1.5px] border-[#1A2744] text-left font-extrabold">Distance</td>
+                        <td class="border-r-[1.5px] border-[#1A2744]"><input type="text" id="rx_r_dist_sph" class="rx-grid-input" /></td>
+                        <td class="border-r-[1.5px] border-[#1A2744]"><input type="text" id="rx_r_dist_cyl" class="rx-grid-input" /></td>
+                        <td class="border-r-[1.5px] border-[#1A2744]"><input type="text" id="rx_r_dist_axis" class="rx-grid-input" /></td>
+                        <td><input type="text" id="rx_r_dist_rva" class="rx-grid-input" /></td>
+                      </tr>
+                      <tr>
+                        <td class="py-2.5 px-2.5 border-r-[1.5px] border-[#1A2744] text-left font-extrabold">Near (Add)</td>
+                        <td class="border-r-[1.5px] border-[#1A2744]"><input type="text" id="rx_r_near_sph" class="rx-grid-input" /></td>
+                        <td class="border-r-[1.5px] border-[#1A2744]"><input type="text" id="rx_r_near_cyl" class="rx-grid-input" /></td>
+                        <td class="border-r-[1.5px] border-[#1A2744]"><input type="text" id="rx_r_near_axis" class="rx-grid-input" /></td>
+                        <td><input type="text" id="rx_r_near_rva" class="rx-grid-input" /></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Right Block: Left Eye (OS) -->
+                <div class="col-span-5 border-[1.5px] border-[#1A2744]">
+                  <table class="w-full border-collapse text-center text-xs sm:text-sm font-bold">
+                    <thead>
+                      <tr class="border-b-[1.5px] border-[#1A2744]">
+                        <th class="py-2 border-r-[1.5px] border-[#1A2744]">Sph</th>
+                        <th class="py-2 border-r-[1.5px] border-[#1A2744]">Cyl</th>
+                        <th class="py-2 border-r-[1.5px] border-[#1A2744]">Axis</th>
+                        <th class="py-2">RVA</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="border-b-[1.5px] border-[#1A2744]">
+                        <td class="py-2.5 border-r-[1.5px] border-[#1A2744]"><input type="text" id="rx_l_dist_sph" class="rx-grid-input" /></td>
+                        <td class="border-r-[1.5px] border-[#1A2744]"><input type="text" id="rx_l_dist_cyl" class="rx-grid-input" /></td>
+                        <td class="border-r-[1.5px] border-[#1A2744]"><input type="text" id="rx_l_dist_axis" class="rx-grid-input" /></td>
+                        <td><input type="text" id="rx_l_dist_rva" class="rx-grid-input" /></td>
+                      </tr>
+                      <tr>
+                        <td class="py-2.5 border-r-[1.5px] border-[#1A2744]"><input type="text" id="rx_l_near_sph" class="rx-grid-input" /></td>
+                        <td class="border-r-[1.5px] border-[#1A2744]"><input type="text" id="rx_l_near_cyl" class="rx-grid-input" /></td>
+                        <td class="border-r-[1.5px] border-[#1A2744]"><input type="text" id="rx_l_near_axis" class="rx-grid-input" /></td>
+                        <td><input type="text" id="rx_l_near_rva" class="rx-grid-input" /></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. MEASUREMENTS ROW: R-PD | L-PD | Height -->
+            <div class="flex flex-wrap items-end justify-between gap-4 py-2 text-xs sm:text-sm font-bold">
+              <div class="flex items-end gap-1">
+                <span>R-PD:</span>
+                <input type="text" id="invRpd" class="receipt-line-input w-20 text-center" />
+                <span>mm</span>
+              </div>
+
+              <div class="flex items-end gap-1">
+                <span>L-PD:</span>
+                <input type="text" id="invLpd" class="receipt-line-input w-20 text-center" />
+                <span>mm</span>
+              </div>
+
+              <div class="flex items-end gap-1">
+                <span>Height:</span>
+                <input type="text" id="invHeight" class="receipt-line-input w-24 text-center" />
+                <span>mm above lower rim</span>
+              </div>
+            </div>
+
+            <!-- 5. ITEMIZED BILLING: Frame & Lances (Exact spelling 'Lances:' from receipt) -->
+            <div class="space-y-4 mt-4 text-xs sm:text-sm font-bold">
+              <div class="flex items-end gap-2">
+                <span class="w-16 shrink-0">Frame:</span>
+                <input type="text" id="invFrameDesc" placeholder="Frame model / brand..." class="receipt-line-input flex-1" />
+                <span class="shrink-0 pl-2">Rs.</span>
+                <input type="number" id="invFrameRs" value="0" oninput="recalculateInvoiceTotals(false)" class="receipt-line-input w-32 text-right font-extrabold" />
+              </div>
+
+              <div class="flex items-end gap-2">
+                <span class="w-16 shrink-0">Lances:</span>
+                <input type="text" id="invLensesDesc" placeholder="Lens type / coating..." class="receipt-line-input flex-1" />
+                <span class="shrink-0 pl-2">Rs.</span>
+                <input type="number" id="invLensesRs" value="0" oninput="recalculateInvoiceTotals(false)" class="receipt-line-input w-32 text-right font-extrabold" />
+              </div>
+            </div>
+
+            <!-- 6. TOTALS (LEFT) & SIGN-OFF ROW (RIGHT) -->
+            <div class="grid grid-cols-12 gap-6 mt-7 mb-6 text-xs sm:text-sm font-bold">
+              <!-- Left Financial Column: Total, Advance, Balance -->
+              <div class="col-span-6 space-y-4">
+                <div class="flex items-end gap-2">
+                  <span class="w-24 shrink-0">Total: Rs.</span>
+                  <input type="number" id="invTotalRs" value="0" oninput="recalculateInvoiceTotals(true)" class="receipt-line-input w-44 text-right font-black text-base" />
+                </div>
+
+                <div class="flex items-end gap-2">
+                  <span class="w-24 shrink-0">Advance: Rs.</span>
+                  <input type="number" id="invAdvanceRs" value="0" oninput="recalculateInvoiceTotals(true)" class="receipt-line-input w-44 text-right font-extrabold text-emerald-950" />
+                </div>
+
+                <div class="flex items-end gap-2">
+                  <span class="w-24 shrink-0">Balance: Rs.</span>
+                  <input type="number" id="invBalanceRs" readonly value="0" class="receipt-line-input w-44 text-right font-black text-base text-rose-950" />
+                </div>
+              </div>
+
+              <!-- Right Sign-off Column: Examined By, Delivery Date, Signature -->
+              <div class="col-span-6 space-y-4">
+                <div class="flex items-end gap-2">
+                  <span class="w-28 shrink-0">Examined By:</span>
+                  <input type="text" id="invExaminedBy" class="receipt-line-input flex-1" />
+                </div>
+
+                <div class="flex items-end gap-2">
+                  <span class="w-28 shrink-0">Delivery Date:</span>
+                  <input type="text" id="invDeliveryDate" class="receipt-line-input flex-1" />
+                </div>
+
+                <div class="flex items-end gap-2">
+                  <span class="w-28 shrink-0">Signature:</span>
+                  <input type="text" id="invSignature" class="receipt-line-input flex-1 italic" />
+                </div>
+              </div>
+            </div>
+
+            <!-- 7. BOTTOM HORIZONTAL RULE & PESHAWAR BRANCH FOOTER -->
+            <div class="border-t-2 border-[#1A2744] pt-3.5 mt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div class="flex items-start gap-2.5">
+                <i class="fa-solid fa-location-dot text-2xl text-[#1A2744] mt-0.5"></i>
+                <div class="text-sm sm:text-base font-extrabold leading-tight text-[#1A2744]">
+                  <div>Shakeel Plaza, University Road,</div>
+                  <div>Opp: Islamia College Peshawar</div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3 text-sm sm:text-base font-extrabold text-[#1A2744]">
+                <div class="flex flex-col items-center gap-1.5">
+                  <span class="w-6 h-6 rounded-full border-[1.5px] border-[#1A2744] flex items-center justify-center text-xs">
+                    <i class="fa-solid fa-phone"></i>
+                  </span>
+                  <span class="w-6 h-6 rounded-full border-[1.5px] border-[#1A2744] flex items-center justify-center text-sm">
+                    <i class="fa-brands fa-whatsapp"></i>
+                  </span>
+                </div>
+                <div class="leading-snug tracking-tight">
+                  <div>091-5853091</div>
+                  <div>0312-9994625</div>
+                  <div>0300-5896201</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </main>
+
+      <!-- ==================== VIEW 2: SAVED INVOICES & LEDGER ==================== -->
+      <section id="sectionLedger" class="hidden max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-5">
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-xl font-extrabold text-navy-900">Saved Invoices & Balance Ledger</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Search receipts by serial #, customer name, or mobile number. Collect pending balances or reprint slips.</p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2.5">
+            <div class="relative">
+              <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
+              <input
+                type="text"
+                id="ledgerSearchInput"
+                oninput="renderLedgerTable()"
+                placeholder="Search #1001, name, mobile..."
+                class="bg-slate-50 border border-slate-200 rounded-xl pl-8 pr-3.5 py-2 text-xs font-semibold focus:outline-none focus:border-navy-800 w-56"
+              />
+            </div>
+
+            <select id="ledgerStatusFilter" onchange="renderLedgerTable()" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none">
+              <option value="ALL">All Statuses</option>
+              <option value="PAID">Paid in Full</option>
+              <option value="PARTIAL">Partial / Advance</option>
+              <option value="UNPAID">Unpaid</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-extrabold uppercase tracking-wider text-slate-500">
+                  <th class="py-3.5 px-4">Serial #</th>
+                  <th class="py-3.5 px-4">Date & Delivery</th>
+                  <th class="py-3.5 px-4">Customer & Mobile</th>
+                  <th class="py-3.5 px-4">Frame & Lances</th>
+                  <th class="py-3.5 px-4 text-right">Total (Rs.)</th>
+                  <th class="py-3.5 px-4 text-right">Advance</th>
+                  <th class="py-3.5 px-4 text-right">Balance</th>
+                  <th class="py-3.5 px-4 text-center">Status</th>
+                  <th class="py-3.5 px-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="ledgerTableBody" class="divide-y divide-slate-100 text-xs">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== VIEW 3: OPTICAL INVENTORY & STOCK ==================== -->
+      <section id="sectionInventory" class="hidden max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-5">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Add Stock Item Form -->
+          <div class="lg:col-span-4 bg-white rounded-2xl border border-slate-200 p-5 shadow-2xs h-fit">
+            <h3 class="text-base font-extrabold text-navy-900 border-b border-slate-100 pb-3 mb-4">
+              <i class="fa-solid fa-plus-circle text-emerald-600 mr-1.5"></i> Add Optical Stock Item
+            </h3>
+            <form onsubmit="handleAddInventoryItem(event)" class="space-y-3.5 text-xs">
+              <div>
+                <label class="block font-bold text-slate-600 mb-1">SKU / Code *</label>
+                <input type="text" id="stockSku" required placeholder="e.g., FRM-209" class="w-full rounded-xl border border-slate-200 px-3 py-2 font-semibold focus:outline-none focus:border-navy-800" />
+              </div>
+              <div>
+                <label class="block font-bold text-slate-600 mb-1">Item Name & Model *</label>
+                <input type="text" id="stockName" required placeholder="e.g., Ray-Ban Style Titanium Half-Rim" class="w-full rounded-xl border border-slate-200 px-3 py-2 font-semibold focus:outline-none focus:border-navy-800" />
+              </div>
+              <div class="grid grid-cols-2 gap-2.5">
+                <div>
+                  <label class="block font-bold text-slate-600 mb-1">Category *</label>
+                  <select id="stockCategory" class="w-full rounded-xl border border-slate-200 px-3 py-2 font-semibold bg-white focus:outline-none">
+                    <option value="Frame">Frame</option>
+                    <option value="Lenses">Lenses</option>
+                    <option value="Accessory">Accessory</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-600 mb-1">Stock Qty *</label>
+                  <input type="number" id="stockQty" min="0" value="15" required class="w-full rounded-xl border border-slate-200 px-3 py-2 font-semibold focus:outline-none" />
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-2.5">
+                <div>
+                  <label class="block font-bold text-slate-600 mb-1">Cost Price (Rs.) *</label>
+                  <input type="number" id="stockCost" min="0" value="1200" required class="w-full rounded-xl border border-slate-200 px-3 py-2 font-semibold focus:outline-none" />
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-600 mb-1">Selling Price (Rs.) *</label>
+                  <input type="number" id="stockPrice" min="0" value="2500" required class="w-full rounded-xl border border-slate-200 px-3 py-2 font-semibold focus:outline-none" />
+                </div>
+              </div>
+              <button type="submit" class="w-full bg-navy-900 hover:bg-navy-800 text-amber-300 font-extrabold py-2.5 rounded-xl shadow-xs transition">
+                Save Item to Inventory
+              </button>
+            </form>
+          </div>
+
+          <!-- Inventory Stock Table -->
+          <div class="lg:col-span-8 bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden">
+            <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h2 class="text-lg font-extrabold text-navy-900">Shop Optical Inventory</h2>
+                <p class="text-xs text-slate-500">Click <strong>+ Add to Invoice</strong> on any frame or lens to load it directly into the receipt.</p>
+              </div>
+              <input
+                type="text"
+                id="stockSearchInput"
+                oninput="renderInventoryTable()"
+                placeholder="Filter SKU or item..."
+                class="bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold focus:outline-none w-48"
+              />
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-extrabold uppercase tracking-wider text-slate-500">
+                    <th class="py-3 px-4">SKU</th>
+                    <th class="py-3 px-4">Item Description</th>
+                    <th class="py-3 px-4">Type</th>
+                    <th class="py-3 px-4 text-right">Cost</th>
+                    <th class="py-3 px-4 text-right">Sell (Rs.)</th>
+                    <th class="py-3 px-4 text-center">In Stock</th>
+                    <th class="py-3 px-4 text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="inventoryTableBody" class="divide-y divide-slate-100 text-xs">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== VIEW 4: CUSTOMER RX RECORDS ==================== -->
+      <section id="sectionCustomers" class="hidden max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-5">
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-xl font-extrabold text-navy-900">Patient & Customer Rx Directory</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Complete optical prescription history synced automatically from saved invoices.</p>
+          </div>
+          <input
+            type="text"
+            id="customerSearchInput"
+            oninput="renderCustomersGrid()"
+            placeholder="Search patient name or mobile..."
+            class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-xs font-semibold focus:outline-none w-64"
+          />
+        </div>
+
+        <div id="customersGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Populated dynamically -->
+        </div>
+      </section>
+
     </div>
   </div>
 
-  <!-- ==================== POST RFQ MODAL ==================== -->
-  <div id="rfqModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/60 backdrop-blur-sm p-4">
-    <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-200 overflow-hidden">
-      <div class="px-6 py-4 bg-navy-900 text-white flex items-center justify-between">
+  <!-- ==================== COLLECT BALANCE PAYMENT MODAL ==================== -->
+  <div id="balanceModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/60 backdrop-blur-xs p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-200 overflow-hidden">
+      <div class="px-5 py-4 bg-navy-900 text-white flex items-center justify-between">
         <div>
-          <h3 class="text-lg font-extrabold">Post an Optical Request for Quotation</h3>
-          <p class="text-xs text-slate-300">Receive direct wholesale quotes from optical factories & labs.</p>
+          <h3 class="text-base font-extrabold">Record Balance Payment</h3>
+          <p id="balModalSubtitle" class="text-xs text-amber-300">Receipt #1000</p>
         </div>
-        <button onclick="closeRfqModal()" class="w-8 h-8 rounded-lg hover:bg-white/10 flex items-center justify-center">
+        <button onclick="closeBalanceModal()" class="w-8 h-8 rounded-lg hover:bg-white/10 flex items-center justify-center">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
-      <form onsubmit="handleCreateRfq(event)" class="p-6 space-y-4">
-        <div>
-          <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Optical Product Needed *</label>
-          <input type="text" id="rfqProduct" required placeholder="e.g., 1.67 High-Index Photochromic Blue-Cut Lenses" class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm focus:outline-none focus:border-navy-800" />
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Target Quantity *</label>
-            <input type="number" id="rfqQty" required min="1" value="200" class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm focus:outline-none focus:border-navy-800" />
+      <form onsubmit="submitBalancePayment(event)" class="p-5 space-y-4 text-xs">
+        <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-200 space-y-1.5">
+          <div class="flex justify-between">
+            <span class="text-slate-500">Customer:</span>
+            <strong id="balModalCustomer" class="text-slate-900">-</strong>
           </div>
-          <div>
-            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Target Unit Price (Rs.)</label>
-            <input type="number" id="rfqTargetPrice" step="1" value="850" class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm focus:outline-none focus:border-navy-800" />
+          <div class="flex justify-between">
+            <span class="text-slate-500">Total Bill:</span>
+            <strong id="balModalTotal" class="text-slate-900">Rs. 0</strong>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500">Already Paid (Advance):</span>
+            <strong id="balModalPaid" class="text-emerald-700">Rs. 0</strong>
+          </div>
+          <div class="flex justify-between pt-1.5 border-t border-slate-200 text-sm">
+            <span class="font-bold text-rose-700">Remaining Balance:</span>
+            <strong id="balModalRemaining" class="text-rose-700">Rs. 0</strong>
           </div>
         </div>
+
         <div>
-          <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Optical Clinic / Buyer Name *</label>
-          <input type="text" id="rfqBuyer" required placeholder="e.g., Khyber Eye Care Center (Peshawar)" class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm focus:outline-none focus:border-navy-800" />
+          <label class="block font-bold text-slate-700 mb-1">Amount Received Now (Rs.) *</label>
+          <input type="number" id="balPaymentInput" min="1" required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm font-extrabold focus:outline-none focus:border-navy-800" />
         </div>
-        <div>
-          <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Coating, Index & Delivery Specifications</label>
-          <textarea id="rfqDetails" rows="3" placeholder="HMC green coating, 70mm diameter, delivery to University Road Peshawar..." class="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-sm focus:outline-none focus:border-navy-800"></textarea>
+
+        <div class="flex justify-end gap-2 pt-1">
+          <button type="button" onclick="closeBalanceModal()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 font-bold text-slate-700">Cancel</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold shadow-xs">Confirm Payment</button>
         </div>
-        <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded-xl text-sm shadow-md transition">
-          Broadcast Optical RFQ
-        </button>
       </form>
     </div>
   </div>
 
-  <!-- ==================== SLIDE-OVER BULK ORDER DRAWER ==================== -->
-  <div id="cartDrawerBackdrop" onclick="toggleCartDrawer(false)" class="fixed inset-0 z-50 hidden bg-slate-950/50 backdrop-blur-xs transition-opacity"></div>
-  <aside id="cartDrawer" class="fixed top-0 right-0 z-50 h-full w-full max-w-md bg-white shadow-2xl border-l border-slate-200 transform translate-x-full transition-transform duration-300 flex flex-col">
-    <div class="px-6 py-4 bg-navy-900 text-white flex items-center justify-between">
-      <div class="flex items-center gap-2.5">
-        <i class="fa-solid fa-cart-flatbed text-amber-300"></i>
-        <div>
-          <h3 class="font-extrabold text-base">Wholesale Optical Order</h3>
-          <p class="text-[11px] text-slate-300">Auto-populates Cambridge Opticians Invoice Slip</p>
-        </div>
-      </div>
-      <button onclick="toggleCartDrawer(false)" class="w-8 h-8 rounded-lg hover:bg-white/10 flex items-center justify-center">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-    </div>
-
-    <div id="cartItemsContainer" class="flex-1 overflow-y-auto p-5 space-y-3">
-      <!-- Populated dynamically -->
-    </div>
-
-    <div class="border-t border-slate-200 bg-slate-50 p-5 space-y-3.5">
-      <!-- Quick Buyer Details for the Invoice -->
-      <div class="grid grid-cols-2 gap-2">
-        <input type="text" id="drawerBuyerName" placeholder="Buyer / Clinic Name" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-semibold focus:outline-none focus:border-navy-800" />
-        <input type="text" id="drawerBuyerPhone" placeholder="Mobile (03XX-...)" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-semibold focus:outline-none focus:border-navy-800" />
-      </div>
-
-      <div class="space-y-1 text-sm">
-        <div class="flex justify-between text-slate-500">
-          <span>Total Optical Units</span>
-          <span id="cartTotalUnits" class="font-semibold text-slate-800">0 pcs</span>
-        </div>
-        <div class="flex justify-between text-base font-extrabold text-navy-900 pt-1 border-t border-slate-200">
-          <span>Estimated Total</span>
-          <span id="cartGrandTotal" class="text-orange-600">Rs. 0</span>
-        </div>
-      </div>
-
-      <button onclick="generateCambridgeInvoiceFromCart()" class="w-full bg-navy-900 hover:bg-navy-800 text-amber-300 font-extrabold py-3.5 rounded-xl text-sm shadow-md transition flex items-center justify-center gap-2">
-        <i class="fa-solid fa-file-invoice"></i> Generate Cambridge Opticians Invoice
-      </button>
-    </div>
-  </aside>
-
   <!-- ==================== TOAST NOTIFICATION CONTAINER ==================== -->
   <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
 
-  <!-- ==================== JAVASCRIPT APPLICATION LOGIC ==================== -->
+  <!-- ==================== JAVASCRIPT POS & LEDGER LOGIC ==================== -->
   <script>
-    // Curated Real Optical Photography Presets (Unsplash)
-    const IMAGE_PRESETS = [
+    const STORAGE_KEYS = {
+      INVOICES: 'cambridge_opticians_invoices_v1',
+      INVENTORY: 'cambridge_opticians_inventory_v1'
+    };
+
+    // Default 8 Optical Inventory Items (Frames & Lenses in Rs.)
+    const DEFAULT_INVENTORY = [
+      { sku: 'FRM-101', name: 'Mazzucchelli Acetate Full-Rim Black', category: 'Frame', cost: 1600, price: 3200, stock: 18 },
+      { sku: 'FRM-102', name: 'Japanese Beta-Titanium Rimless Gold', category: 'Frame', cost: 2400, price: 4800, stock: 12 },
+      { sku: 'FRM-103', name: 'TR90 Flexible Matte Navy Rectangular', category: 'Frame', cost: 950, price: 2100, stock: 25 },
+      { sku: 'FRM-104', name: 'Classic Tortoiseshell Clubmaster Frame', category: 'Frame', cost: 1450, price: 2900, stock: 14 },
+      { sku: 'LNS-201', name: '1.61 Blue-Cut Anti-Glare HMC Pair', category: 'Lenses', cost: 750, price: 1800, stock: 40 },
+      { sku: 'LNS-202', name: 'Photochromic Gray UV400 Single Vision', category: 'Lenses', cost: 1100, price: 2400, stock: 32 },
+      { sku: 'LNS-203', name: 'Digital Freeform Progressive Multifocal', category: 'Lenses', cost: 2600, price: 5500, stock: 15 },
+      { sku: 'LNS-204', name: 'CR-39 Hard Multi-Coated (HMC) Standard', category: 'Lenses', cost: 450, price: 1100, stock: 55 }
+    ];
+
+    // Default 4 Realistic Sample Invoices (#1000 to #1003)
+    const DEFAULT_INVOICES = [
       {
-        label: "Classic Acetate Eyeglasses",
-        url: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?auto=format&fit=crop&w=800&q=80"
+        serial: '1000',
+        date: '12/11/2026',
+        deliveryDate: '15/11/2026',
+        customerName: 'Tariq Mahmood Khan',
+        customerPhone: '0300-9124581',
+        rx: {
+          rDist: { sph: '-1.50', cyl: '-0.50', axis: '180', rva: '6/6' },
+          rNear: { sph: '+1.25', cyl: '', axis: '', rva: 'N6' },
+          lDist: { sph: '-1.25', cyl: '-0.25', axis: '90', rva: '6/6' },
+          lNear: { sph: '+1.25', cyl: '', axis: '', rva: 'N6' }
+        },
+        rpd: '32',
+        lpd: '31.5',
+        height: '18',
+        frameDesc: 'Japanese Beta-Titanium Rimless Gold',
+        frameRs: 4800,
+        lensesDesc: '1.61 Blue-Cut Anti-Glare HMC Pair',
+        lensesRs: 1800,
+        totalRs: 6600,
+        advanceRs: 6600,
+        balanceRs: 0,
+        examinedBy: 'Dr. Kamran',
+        signature: 'Cambridge'
       },
       {
-        label: "Titanium Wire Frames",
-        url: "https://images.unsplash.com/photo-1591076482161-42ce6da69f67?auto=format&fit=crop&w=800&q=80"
+        serial: '1001',
+        date: '13/11/2026',
+        deliveryDate: '16/11/2026',
+        customerName: 'Ayesha Siddiqui',
+        customerPhone: '0312-8843109',
+        rx: {
+          rDist: { sph: '-2.25', cyl: '-0.75', axis: '175', rva: '6/6' },
+          rNear: { sph: '', cyl: '', axis: '', rva: '' },
+          lDist: { sph: '-2.00', cyl: '-0.50', axis: '10', rva: '6/6' },
+          lNear: { sph: '', cyl: '', axis: '', rva: '' }
+        },
+        rpd: '30',
+        lpd: '30',
+        height: '16',
+        frameDesc: 'Mazzucchelli Acetate Full-Rim Black',
+        frameRs: 3200,
+        lensesDesc: 'Photochromic Gray UV400 Single Vision',
+        lensesRs: 2400,
+        totalRs: 5600,
+        advanceRs: 3000,
+        balanceRs: 2600,
+        examinedBy: 'Zeeshan Optom',
+        signature: 'Cambridge'
       },
       {
-        label: "Optical Lens & Phoropter",
-        url: "https://images.unsplash.com/photo-1577401239170-897942555fb3?auto=format&fit=crop&w=800&q=80"
+        serial: '1002',
+        date: '14/11/2026',
+        deliveryDate: '17/11/2026',
+        customerName: 'Haji Muhammad Yousaf',
+        customerPhone: '0333-9401122',
+        rx: {
+          rDist: { sph: '+0.75', cyl: '-0.50', axis: '90', rva: '6/6' },
+          rNear: { sph: '+2.25', cyl: '', axis: '', rva: 'N6' },
+          lDist: { sph: '+1.00', cyl: '-0.25', axis: '85', rva: '6/6' },
+          lNear: { sph: '+2.25', cyl: '', axis: '', rva: 'N6' }
+        },
+        rpd: '33',
+        lpd: '32.5',
+        height: '19',
+        frameDesc: 'Classic Tortoiseshell Clubmaster Frame',
+        frameRs: 2900,
+        lensesDesc: 'Digital Freeform Progressive Multifocal',
+        lensesRs: 5500,
+        totalRs: 8400,
+        advanceRs: 5000,
+        balanceRs: 3400,
+        examinedBy: 'Dr. Kamran',
+        signature: 'Cambridge'
       },
       {
-        label: "Polarized Aviator Sunglasses",
-        url: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=800&q=80"
-      },
-      {
-        label: "Modern Tortoise Eyewear",
-        url: "https://images.unsplash.com/photo-1509695507497-903c140c43b0?auto=format&fit=crop&w=800&q=80"
-      },
-      {
-        label: "Contact Lens Care & Vials",
-        url: "https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=800&q=80"
+        serial: '1003',
+        date: '15/11/2026',
+        deliveryDate: '16/11/2026',
+        customerName: 'Bilal Ahmad Afridi',
+        customerPhone: '0301-5520987',
+        rx: {
+          rDist: { sph: '-0.75', cyl: '', axis: '', rva: '6/6' },
+          rNear: { sph: '', cyl: '', axis: '', rva: '' },
+          lDist: { sph: '-1.00', cyl: '', axis: '', rva: '6/6' },
+          lNear: { sph: '', cyl: '', axis: '', rva: '' }
+        },
+        rpd: '31.5',
+        lpd: '31.5',
+        height: '17',
+        frameDesc: 'TR90 Flexible Matte Navy Rectangular',
+        frameRs: 2100,
+        lensesDesc: 'CR-39 Hard Multi-Coated (HMC) Standard',
+        lensesRs: 1100,
+        totalRs: 3200,
+        advanceRs: 0,
+        balanceRs: 3200,
+        examinedBy: 'Zeeshan Optom',
+        signature: 'Cambridge'
       }
     ];
 
-    // Pre-Populated B2B Optical Catalog (Priced in PKR / Rs. to match Cambridge Opticians Invoice)
-    let products = [
-      {
-        id: "OPT-101",
-        title: "Italian Mazzucchelli Acetate Optical Frames — Wholesale Assorted Box",
-        category: "Frames",
-        supplier: "Cambridge Optical Wholesale Division",
-        location: "Peshawar, PK",
-        years: 15,
-        verified: true,
-        readyToShip: true,
-        customOem: true,
-        moq: 12,
-        tiers: [
-          { min: 12, max: 49, price: 1850 },
-          { min: 50, max: 149, price: 1490 },
-          { min: 150, max: null, price: 1180 }
-        ],
-        image: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?auto=format&fit=crop&w=800&q=80"
-      },
-      {
-        id: "OPT-102",
-        title: "1.61 Blue-Cut Anti-Reflective HMC Single Vision Optical Lenses (Pair)",
-        category: "Lenses",
-        supplier: "Khyber Precision Optical Lab",
-        location: "Peshawar, PK",
-        years: 12,
-        verified: true,
-        readyToShip: true,
-        customOem: true,
-        moq: 20,
-        tiers: [
-          { min: 20, max: 99, price: 950 },
-          { min: 100, max: 299, price: 760 },
-          { min: 300, max: null, price: 590 }
-        ],
-        image: "https://images.unsplash.com/photo-1577401239170-897942555fb3?auto=format&fit=crop&w=800&q=80"
-      },
-      {
-        id: "OPT-103",
-        title: "Ultra-Light Japanese Beta-Titanium Rimless & Half-Rim Frames",
-        category: "Frames",
-        supplier: "Sino-Euro Eyewear Mfg Co.",
-        location: "Wenzhou, CN",
-        years: 10,
-        verified: true,
-        readyToShip: true,
-        customOem: true,
-        moq: 15,
-        tiers: [
-          { min: 15, max: 49, price: 2400 },
-          { min: 50, max: 149, price: 1950 },
-          { min: 150, max: null, price: 1580 }
-        ],
-        image: "https://images.unsplash.com/photo-1591076482161-42ce6da69f67?auto=format&fit=crop&w=800&q=80"
-      },
-      {
-        id: "OPT-104",
-        title: "Digital Freeform Progressive Multifocal Lenses — Photochromic Gray",
-        category: "Lenses",
-        supplier: "Cambridge Rx Surfacing Lab",
-        location: "Peshawar, PK",
-        years: 15,
-        verified: true,
-        readyToShip: true,
-        customOem: true,
-        moq: 10,
-        tiers: [
-          { min: 10, max: 49, price: 3200 },
-          { min: 50, max: 149, price: 2650 },
-          { min: 150, max: null, price: 2150 }
-        ],
-        image: "https://images.unsplash.com/photo-1509695507497-903c140c43b0?auto=format&fit=crop&w=800&q=80"
-      },
-      {
-        id: "OPT-105",
-        title: "UV400 Polarized TAC Metal Aviator & Wayfarer Sunglasses Bulk Pack",
-        category: "Sunglasses",
-        supplier: "Apex Sunwear Exports",
-        location: "Lahore, PK",
-        years: 8,
-        verified: true,
-        readyToShip: true,
-        customOem: true,
-        moq: 24,
-        tiers: [
-          { min: 24, max: 99, price: 1350 },
-          { min: 100, max: 299, price: 1080 },
-          { min: 300, max: null, price: 840 }
-        ],
-        image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=800&q=80"
-      },
-      {
-        id: "OPT-106",
-        title: "Silicone Hydrogel Monthly Clear & Cosmetic Contact Lenses (Box of 6)",
-        category: "Contact Lenses",
-        supplier: "BioVision Optics Distribution",
-        location: "Seoul, KR",
-        years: 9,
-        verified: true,
-        readyToShip: true,
-        customOem: false,
-        moq: 20,
-        tiers: [
-          { min: 20, max: 99, price: 1100 },
-          { min: 100, max: 299, price: 890 },
-          { min: 300, max: null, price: 720 }
-        ],
-        image: "https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=800&q=80"
-      },
-      {
-        id: "OPT-107",
-        title: "Digital Auto Lensmeter & PD Pupilometer Clinic Diagnostic Bundle",
-        category: "Equipment",
-        supplier: "MedOptic Instruments GmbH",
-        location: "Islamabad, PK",
-        years: 11,
-        verified: true,
-        readyToShip: false,
-        customOem: false,
-        moq: 1,
-        tiers: [
-          { min: 1, max: 2, price: 85000 },
-          { min: 3, max: 5, price: 76000 },
-          { min: 6, max: null, price: 69000 }
-        ],
-        image: "https://images.unsplash.com/photo-1577401239170-897942555fb3?auto=format&fit=crop&w=800&q=80"
-      },
-      {
-        id: "OPT-108",
-        title: "Kids Flexible TR90 Unbreakable Eyeglass Frames with Spring Hinges",
-        category: "Frames",
-        supplier: "JuniorSight Optical Mfg",
-        location: "Shenzhen, CN",
-        years: 7,
-        verified: false,
-        readyToShip: true,
-        customOem: true,
-        moq: 20,
-        tiers: [
-          { min: 20, max: 79, price: 1150 },
-          { min: 80, max: 199, price: 920 },
-          { min: 200, max: null, price: 740 }
-        ],
-        image: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?auto=format&fit=crop&w=800&q=80"
-      }
-    ];
-
-    // Pre-populated Optical RFQs
-    let rfqList = [
-      {
-        id: "RFQ-304",
-        product: "CR-39 1.56 Hard Multi-Coated (HMC) Uncut Finished Lenses (70mm)",
-        qty: 500,
-        targetPrice: 480,
-        buyer: "City Eye Clinic (Hayatabad, Peshawar)",
-        details: "Sph -0.25 to -6.00, Cyl up to -2.00, individual paper envelopes required.",
-        quotesReceived: 5,
-        postedAgo: "22 mins ago"
-      },
-      {
-        id: "RFQ-303",
-        product: "TR90 Men's Rectangular Optical Frames with Custom Temple Logo",
-        qty: 150,
-        targetPrice: 1100,
-        buyer: "VisionPlus Opticians (Rawalpindi)",
-        details: "Matte black, gunmetal, and navy blue assortment with hard protective cases.",
-        quotesReceived: 3,
-        postedAgo: "2 hours ago"
-      },
-      {
-        id: "RFQ-302",
-        product: "Bifocal Kryptok & D-Segment Mineral Glass Lenses Bulk Order",
-        qty: 300,
-        targetPrice: 550,
-        buyer: "Mardan Optical Center (Mardan, KPK)",
-        details: "Add +1.00 to +3.00, scratch-resistant coating, urgent dispatch.",
-        quotesReceived: 6,
-        postedAgo: "4 hours ago"
-      }
-    ];
-
-    // Application State
-    let activeQuickFilter = "all";
-    let activeModalProduct = null;
-    let bulkCart = [];
-    let currentReceiptSerial = 1000;
+    let invoices = [];
+    let inventory = [];
+    let selectedFrameSku = '';
+    let selectedLensSku = '';
+    let activeBalanceInvoiceSerial = null;
 
     // ==================== INITIALIZATION ====================
-    window.addEventListener("DOMContentLoaded", () => {
-      initInvoiceDates();
-      renderImagePresets();
-      applyFilters();
-      renderRfqFeed();
-      renderSellerInventory();
-      renderCartDrawer();
+    window.addEventListener('DOMContentLoaded', () => {
+      loadDataFromStorage();
+      setDefaultDates();
+      assignNextSerialNumber();
+      refreshAllUI();
     });
 
-    function initInvoiceDates() {
+    function loadDataFromStorage() {
+      try {
+        const savedInv = localStorage.getItem(STORAGE_KEYS.INVOICES);
+        const savedStock = localStorage.getItem(STORAGE_KEYS.INVENTORY);
+
+        invoices = savedInv ? JSON.parse(savedInv) : [...DEFAULT_INVOICES];
+        inventory = savedStock ? JSON.parse(savedStock) : [...DEFAULT_INVENTORY];
+
+        if (!savedInv) localStorage.setItem(STORAGE_KEYS.INVOICES, JSON.stringify(invoices));
+        if (!savedStock) localStorage.setItem(STORAGE_KEYS.INVENTORY, JSON.stringify(inventory));
+      } catch (err) {
+        invoices = [...DEFAULT_INVOICES];
+        inventory = [...DEFAULT_INVENTORY];
+      }
+    }
+
+    function persistData() {
+      try {
+        localStorage.setItem(STORAGE_KEYS.INVOICES, JSON.stringify(invoices));
+        localStorage.setItem(STORAGE_KEYS.INVENTORY, JSON.stringify(inventory));
+      } catch (err) {
+        console.warn('LocalStorage unavailable:', err);
+      }
+    }
+
+    function getNextSerialNumber() {
+      if (invoices.length === 0) return '1000';
+      const maxNum = invoices.reduce((max, inv) => {
+        const parsed = parseInt(inv.serial, 10);
+        return !isNaN(parsed) && parsed > max ? parsed : max;
+      }, 999);
+      return String(maxNum + 1);
+    }
+
+    function assignNextSerialNumber() {
+      const next = getNextSerialNumber();
+      document.getElementById('invSerialNo').value = next;
+      document.getElementById('topNextSerial').textContent = next;
+    }
+
+    function setDefaultDates() {
       const today = new Date();
-      const delivery = new Date(today);
-      delivery.setDate(today.getDate() + 3);
+      const deliv = new Date(today);
+      deliv.setDate(today.getDate() + 3);
 
       const fmt = (d) =>
-        `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}/${d.getFullYear()}`;
+        `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
 
-      document.getElementById("invDate").value = fmt(today);
-      document.getElementById("invDeliveryDate").value = fmt(delivery);
+      document.getElementById('invDate').value = fmt(today);
+      document.getElementById('invDeliveryDate').value = fmt(deliv);
     }
 
-    // ==================== VIEW NAVIGATION ====================
-    function switchView(viewName) {
-      const views = {
-        marketplace: document.getElementById("viewMarketplace"),
-        invoiceSlip: document.getElementById("viewInvoiceSlip"),
-        rfqFeed: document.getElementById("viewRfqFeed"),
-        sellerHub: document.getElementById("viewSellerHub")
+    function refreshAllUI() {
+      updateKpisAndBadges();
+      populateQuickInventoryDropdowns();
+      renderLedgerTable();
+      renderInventoryTable();
+      renderCustomersGrid();
+      document.getElementById('topNextSerial').textContent = getNextSerialNumber();
+    }
+
+    // ==================== NAVIGATION SWITCHING ====================
+    function switchSection(sectionKey) {
+      const sections = {
+        newInvoice: document.getElementById('sectionNewInvoice'),
+        ledger: document.getElementById('sectionLedger'),
+        inventory: document.getElementById('sectionInventory'),
+        customers: document.getElementById('sectionCustomers')
       };
 
-      const tabs = {
-        marketplace: document.getElementById("tabBuyer"),
-        invoiceSlip: document.getElementById("tabInvoice"),
-        rfqFeed: document.getElementById("tabRfq"),
-        sellerHub: document.getElementById("tabSeller")
+      const navBtns = {
+        newInvoice: document.getElementById('navNewInvoice'),
+        ledger: document.getElementById('navLedger'),
+        inventory: document.getElementById('navInventory'),
+        customers: document.getElementById('navCustomers')
       };
 
-      Object.keys(views).forEach((key) => {
-        if (key === viewName) {
-          views[key].classList.remove("hidden");
-          tabs[key].classList.add("bg-white", "text-navy-900", "shadow-sm");
-          tabs[key].classList.remove("text-slate-600");
+      Object.keys(sections).forEach((key) => {
+        if (key === sectionKey) {
+          sections[key].classList.remove('hidden');
+          navBtns[key].classList.add('bg-amber-400', 'text-slate-950', 'shadow-sm');
+          navBtns[key].classList.remove('text-slate-300', 'hover:bg-slate-900', 'hover:text-white');
         } else {
-          views[key].classList.add("hidden");
-          tabs[key].classList.remove("bg-white", "text-navy-900", "shadow-sm");
-          tabs[key].classList.add("text-slate-600");
+          sections[key].classList.add('hidden');
+          navBtns[key].classList.remove('bg-amber-400', 'text-slate-950', 'shadow-sm');
+          navBtns[key].classList.add('text-slate-300', 'hover:bg-slate-900', 'hover:text-white');
         }
       });
-
-      window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    // ==================== FILTERING & SORTING ====================
-    function setQuickFilter(filterKey) {
-      activeQuickFilter = filterKey;
-      document.querySelectorAll(".quick-pill").forEach((btn) => {
-        if (btn.dataset.filter === filterKey) {
-          btn.classList.add("bg-navy-900", "text-white");
-          btn.classList.remove("bg-slate-100", "text-slate-700");
-        } else {
-          btn.classList.remove("bg-navy-900", "text-white");
-          btn.classList.add("bg-slate-100", "text-slate-700");
-        }
-      });
-      applyFilters();
+    // ==================== KPI & BADGE UPDATES ====================
+    function updateKpisAndBadges() {
+      const totalSales = invoices.reduce((sum, inv) => sum + (Number(inv.totalRs) || 0), 0);
+      const pendingBalance = invoices.reduce((sum, inv) => sum + (Number(inv.balanceRs) || 0), 0);
+
+      document.getElementById('kpiTotalSales').textContent = `Rs. ${totalSales.toLocaleString()}`;
+      document.getElementById('kpiPendingBalance').textContent = `Rs. ${pendingBalance.toLocaleString()}`;
+      document.getElementById('kpiOrderCount').textContent = `${invoices.length} Slips`;
+
+      document.getElementById('sidebarLedgerBadge').textContent = invoices.length;
+      document.getElementById('sidebarStockBadge').textContent = inventory.length;
+
+      // Unique customers by phone or name
+      const uniqueCust = new Set(invoices.map((i) => (i.customerPhone || i.customerName).trim().toLowerCase()).filter(Boolean));
+      document.getElementById('sidebarCustomerBadge').textContent = uniqueCust.size;
     }
 
-    function resetAllFilters() {
-      document.getElementById("searchInput").value = "";
-      document.getElementById("categoryFilter").value = "All";
-      document.getElementById("sortSelect").value = "featured";
-      setQuickFilter("all");
-    }
+    // ==================== RECEIPT CALCULATIONS & QUICK STOCK FILL ====================
+    function recalculateInvoiceTotals(manualTotalOverride = false) {
+      const frameRs = parseFloat(document.getElementById('invFrameRs').value) || 0;
+      const lensesRs = parseFloat(document.getElementById('invLensesRs').value) || 0;
+      const totalInput = document.getElementById('invTotalRs');
 
-    function applyFilters() {
-      const query = document.getElementById("searchInput").value.trim().toLowerCase();
-      const category = document.getElementById("categoryFilter").value;
-      const sortBy = document.getElementById("sortSelect").value;
-
-      let filtered = products.filter((item) => {
-        const matchesSearch =
-          item.title.toLowerCase().includes(query) ||
-          item.supplier.toLowerCase().includes(query) ||
-          item.category.toLowerCase().includes(query) ||
-          item.location.toLowerCase().includes(query);
-
-        const matchesCategory = category === "All" || item.category === category;
-
-        let matchesQuick = true;
-        if (activeQuickFilter === "verified") matchesQuick = item.verified;
-        if (activeQuickFilter === "lowMoq") matchesQuick = item.moq <= 20;
-        if (activeQuickFilter === "readyToShip") matchesQuick = item.readyToShip;
-        if (activeQuickFilter === "customOem") matchesQuick = item.customOem;
-
-        return matchesSearch && matchesCategory && matchesQuick;
-      });
-
-      if (sortBy === "priceLow") {
-        filtered.sort((a, b) => a.tiers[a.tiers.length - 1].price - b.tiers[b.tiers.length - 1].price);
-      } else if (sortBy === "moqLow") {
-        filtered.sort((a, b) => a.moq - b.moq);
+      let total = parseFloat(totalInput.value) || 0;
+      if (!manualTotalOverride) {
+        total = frameRs + lensesRs;
+        totalInput.value = total;
       }
 
-      document.getElementById("visibleCount").textContent = filtered.length;
-      document.getElementById("heroProductCount").textContent = products.length;
-
-      const isFiltered = query !== "" || category !== "All" || activeQuickFilter !== "all";
-      document.getElementById("resetFilterBtn").classList.toggle("hidden", !isFiltered);
-
-      renderProductGrid(filtered);
+      const advance = parseFloat(document.getElementById('invAdvanceRs').value) || 0;
+      const balance = Math.max(0, total - advance);
+      document.getElementById('invBalanceRs').value = balance;
     }
 
-    // ==================== RENDER OPTICAL MARKETPLACE GRID ====================
-    function renderProductGrid(items) {
-      const grid = document.getElementById("productGrid");
-      const emptyState = document.getElementById("emptyState");
+    function populateQuickInventoryDropdowns() {
+      const frameSel = document.getElementById('quickFrameSelect');
+      const lensSel = document.getElementById('quickLensSelect');
 
-      if (items.length === 0) {
-        grid.innerHTML = "";
-        emptyState.classList.remove("hidden");
+      const frames = inventory.filter((i) => i.category === 'Frame' || i.category === 'Accessory');
+      const lenses = inventory.filter((i) => i.category === 'Lenses');
+
+      frameSel.innerHTML =
+        `<option value="">+ Select Frame from Stock...</option>` +
+        frames
+          .map((f) => `<option value="${f.sku}">${f.name} — Rs. ${f.price.toLocaleString()} (${f.stock} left)</option>`)
+          .join('');
+
+      lensSel.innerHTML =
+        `<option value="">+ Select Lenses from Stock...</option>` +
+        lenses
+          .map((l) => `<option value="${l.sku}">${l.name} — Rs. ${l.price.toLocaleString()} (${l.stock} left)</option>`)
+          .join('');
+    }
+
+    function applyQuickInventoryItem(type) {
+      if (type === 'frame') {
+        const sku = document.getElementById('quickFrameSelect').value;
+        const item = inventory.find((i) => i.sku === sku);
+        if (!item) return;
+        selectedFrameSku = sku;
+        document.getElementById('invFrameDesc').value = item.name;
+        document.getElementById('invFrameRs').value = item.price;
+      } else {
+        const sku = document.getElementById('quickLensSelect').value;
+        const item = inventory.find((i) => i.sku === sku);
+        if (!item) return;
+        selectedLensSku = sku;
+        document.getElementById('invLensesDesc').value = item.name;
+        document.getElementById('invLensesRs').value = item.price;
+      }
+      recalculateInvoiceTotals(false);
+    }
+
+    function addInventoryItemToActiveReceipt(sku) {
+      const item = inventory.find((i) => i.sku === sku);
+      if (!item) return;
+
+      if (item.category === 'Lenses') {
+        selectedLensSku = item.sku;
+        document.getElementById('invLensesDesc').value = item.name;
+        document.getElementById('invLensesRs').value = item.price;
+      } else {
+        selectedFrameSku = item.sku;
+        document.getElementById('invFrameDesc').value = item.name;
+        document.getElementById('invFrameRs').value = item.price;
+      }
+
+      recalculateInvoiceTotals(false);
+      switchSection('newInvoice');
+      showToast(`Added "${item.name}" (Rs. ${item.price.toLocaleString()}) to active receipt.`, 'success');
+    }
+
+    // ==================== SAVE, LOAD & RESET RECEIPT ====================
+    function saveCurrentInvoice() {
+      const serial = document.getElementById('invSerialNo').value.trim() || getNextSerialNumber();
+      const customerName = document.getElementById('invCustomerName').value.trim();
+      const customerPhone = document.getElementById('invCustomerPhone').value.trim();
+
+      if (!customerName) {
+        showToast('Please enter the Customer / Patient Name before saving.', 'error');
+        document.getElementById('invCustomerName').focus();
         return;
       }
 
-      emptyState.classList.add("hidden");
-      grid.innerHTML = items
-        .map((product) => {
-          const lowestPrice = product.tiers[product.tiers.length - 1].price.toLocaleString();
-          const highestPrice = product.tiers[0].price.toLocaleString();
-
-          return `
-            <article class="group bg-white rounded-2xl border border-slate-200 hover:border-navy-800/40 shadow-xs hover:shadow-xl transition-all duration-200 flex flex-col overflow-hidden">
-              <div onclick="openProductModal('${product.id}')" class="relative aspect-[4/3] bg-slate-100 overflow-hidden cursor-pointer">
-                <img
-                  src="${product.image}"
-                  alt="${product.title}"
-                  onerror="this.src='https://placehold.co/600x450/16284C/FFFFFF?text=Cambridge+Opticians'"
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <div class="absolute top-2.5 left-2.5 flex flex-wrap gap-1.5">
-                  ${
-                    product.verified
-                      ? `<span class="bg-navy-900/90 backdrop-blur-xs text-amber-300 text-[10px] font-bold px-2 py-1 rounded-lg flex items-center gap-1 shadow-xs">
-                          <i class="fa-solid fa-circle-check"></i> Verified Lab
-                        </span>`
-                      : ""
-                  }
-                  <span class="bg-white/95 text-slate-800 text-[10px] font-bold px-2 py-1 rounded-lg shadow-xs">
-                    ${product.category}
-                  </span>
-                </div>
-              </div>
-
-              <div class="p-4 flex-1 flex flex-col justify-between space-y-3">
-                <div class="space-y-2">
-                  <div class="flex items-center justify-between text-[11px] text-slate-500">
-                    <span class="font-semibold text-slate-700 truncate max-w-[175px]">${product.supplier}</span>
-                    <span class="shrink-0 bg-slate-100 px-1.5 py-0.5 rounded font-bold text-slate-600">${product.location}</span>
-                  </div>
-
-                  <h3 onclick="openProductModal('${product.id}')" class="text-sm font-bold text-slate-900 group-hover:text-navy-800 line-clamp-2 cursor-pointer leading-snug">
-                    ${product.title}
-                  </h3>
-                </div>
-
-                <div class="pt-2 border-t border-slate-100 space-y-2.5">
-                  <div class="flex items-baseline justify-between">
-                    <div>
-                      <span class="text-sm font-extrabold text-navy-900">Rs. ${lowestPrice} - ${highestPrice}</span>
-                      <span class="text-[11px] text-slate-400"> / pc</span>
-                    </div>
-                    <span class="text-xs font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md">
-                      MOQ: ${product.moq}
-                    </span>
-                  </div>
-
-                  <div class="grid grid-cols-5 gap-2">
-                    <button
-                      onclick="openProductModal('${product.id}')"
-                      class="col-span-4 bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold py-2.5 px-3 rounded-xl transition shadow-xs flex items-center justify-center gap-1.5"
-                    >
-                      <i class="fa-solid fa-layer-group"></i> Bulk Tiers & Order
-                    </button>
-                    <button
-                      onclick="quickInquiryToast('${product.supplier.replace(/'/g, "\\'")}')"
-                      title="Contact Optical Lab"
-                      class="col-span-1 bg-slate-100 hover:bg-navy-900 hover:text-white text-slate-700 rounded-xl flex items-center justify-center transition"
-                    >
-                      <i class="fa-brands fa-whatsapp"></i>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </article>
-          `;
-        })
-        .join("");
-    }
-
-    // ==================== PRODUCT DETAIL & TIER CALCULATOR MODAL ====================
-    function openProductModal(productId) {
-      const product = products.find((p) => p.id === productId);
-      if (!product) return;
-
-      activeModalProduct = product;
-
-      document.getElementById("modalCategoryBadge").textContent = product.category;
-      document.getElementById("modalVerifiedBadge").classList.toggle("hidden", !product.verified);
-      document.getElementById("modalImage").src = product.image;
-      document.getElementById("modalSupplierName").textContent = product.supplier;
-      document.getElementById("modalSupplierYears").textContent = `${product.years} YRS`;
-      document.getElementById("modalSupplierLoc").innerHTML = `<i class="fa-solid fa-location-dot text-slate-400 mr-1"></i> ${product.location}`;
-      document.getElementById("modalTitle").textContent = product.title;
-      document.getElementById("modalMoqHint").textContent = `Min. Order: ${product.moq} units`;
-      document.getElementById("modalCustomNote").value = "";
-
-      const qtyInput = document.getElementById("modalQtyInput");
-      qtyInput.min = product.moq;
-      qtyInput.value = product.moq;
-
-      const tierGrid = document.getElementById("modalTierGrid");
-      tierGrid.innerHTML = product.tiers
-        .map((tier, idx) => {
-          const rangeLabel = tier.max ? `${tier.min} - ${tier.max} pcs` : `${tier.min}+ pcs`;
-          return `
-            <button
-              type="button"
-              onclick="selectModalTier(${tier.min})"
-              id="tierCard-${idx}"
-              class="tier-card text-left p-2.5 rounded-xl border border-slate-200 hover:border-orange-500 transition bg-slate-50"
-            >
-              <div class="text-[11px] font-semibold text-slate-500">${rangeLabel}</div>
-              <div class="text-sm font-extrabold text-navy-900 mt-0.5">Rs. ${tier.price.toLocaleString()}</div>
-            </button>
-          `;
-        })
-        .join("");
-
-      recalculateModalPrice();
-
-      const modal = document.getElementById("productModal");
-      modal.classList.remove("hidden");
-      modal.classList.add("flex");
-    }
-
-    function closeProductModal() {
-      const modal = document.getElementById("productModal");
-      modal.classList.add("hidden");
-      modal.classList.remove("flex");
-      activeModalProduct = null;
-    }
-
-    function selectModalTier(minQty) {
-      document.getElementById("modalQtyInput").value = minQty;
-      recalculateModalPrice();
-    }
-
-    function adjustModalQty(delta) {
-      if (!activeModalProduct) return;
-      const input = document.getElementById("modalQtyInput");
-      const current = parseInt(input.value, 10) || activeModalProduct.moq;
-      const next = Math.max(activeModalProduct.moq, current + delta);
-      input.value = next;
-      recalculateModalPrice();
-    }
-
-    function getUnitPriceForQuantity(product, qty) {
-      let matchedIndex = 0;
-      for (let i = 0; i < product.tiers.length; i++) {
-        if (qty >= product.tiers[i].min) {
-          matchedIndex = i;
-        }
-      }
-      return {
-        tierIndex: matchedIndex,
-        unitPrice: product.tiers[matchedIndex].price
+      const invoiceRecord = {
+        serial,
+        date: document.getElementById('invDate').value.trim(),
+        deliveryDate: document.getElementById('invDeliveryDate').value.trim(),
+        customerName,
+        customerPhone: customerPhone || 'N/A',
+        rx: {
+          rDist: {
+            sph: document.getElementById('rx_r_dist_sph').value.trim(),
+            cyl: document.getElementById('rx_r_dist_cyl').value.trim(),
+            axis: document.getElementById('rx_r_dist_axis').value.trim(),
+            rva: document.getElementById('rx_r_dist_rva').value.trim()
+          },
+          rNear: {
+            sph: document.getElementById('rx_r_near_sph').value.trim(),
+            cyl: document.getElementById('rx_r_near_cyl').value.trim(),
+            axis: document.getElementById('rx_r_near_axis').value.trim(),
+            rva: document.getElementById('rx_r_near_rva').value.trim()
+          },
+          lDist: {
+            sph: document.getElementById('rx_l_dist_sph').value.trim(),
+            cyl: document.getElementById('rx_l_dist_cyl').value.trim(),
+            axis: document.getElementById('rx_l_dist_axis').value.trim(),
+            rva: document.getElementById('rx_l_dist_rva').value.trim()
+          },
+          lNear: {
+            sph: document.getElementById('rx_l_near_sph').value.trim(),
+            cyl: document.getElementById('rx_l_near_cyl').value.trim(),
+            axis: document.getElementById('rx_l_near_axis').value.trim(),
+            rva: document.getElementById('rx_l_near_rva').value.trim()
+          }
+        },
+        rpd: document.getElementById('invRpd').value.trim(),
+        lpd: document.getElementById('invLpd').value.trim(),
+        height: document.getElementById('invHeight').value.trim(),
+        frameDesc: document.getElementById('invFrameDesc').value.trim(),
+        frameRs: parseFloat(document.getElementById('invFrameRs').value) || 0,
+        lensesDesc: document.getElementById('invLensesDesc').value.trim(),
+        lensesRs: parseFloat(document.getElementById('invLensesRs').value) || 0,
+        totalRs: parseFloat(document.getElementById('invTotalRs').value) || 0,
+        advanceRs: parseFloat(document.getElementById('invAdvanceRs').value) || 0,
+        balanceRs: parseFloat(document.getElementById('invBalanceRs').value) || 0,
+        examinedBy: document.getElementById('invExaminedBy').value.trim(),
+        signature: document.getElementById('invSignature').value.trim()
       };
-    }
 
-    function recalculateModalPrice() {
-      if (!activeModalProduct) return;
-      const input = document.getElementById("modalQtyInput");
-      let qty = parseInt(input.value, 10);
-      if (isNaN(qty) || qty < activeModalProduct.moq) {
-        qty = activeModalProduct.moq;
-      }
-
-      const { tierIndex, unitPrice } = getUnitPriceForQuantity(activeModalProduct, qty);
-      const basePrice = activeModalProduct.tiers[0].price;
-      const subtotal = qty * unitPrice;
-
-      activeModalProduct.tiers.forEach((_, idx) => {
-        const card = document.getElementById(`tierCard-${idx}`);
-        if (!card) return;
-        if (idx === tierIndex) {
-          card.classList.add("border-orange-500", "bg-orange-50/70", "ring-2", "ring-orange-500/20");
-          card.classList.remove("border-slate-200", "bg-slate-50");
-        } else {
-          card.classList.remove("border-orange-500", "bg-orange-50/70", "ring-2", "ring-orange-500/20");
-          card.classList.add("border-slate-200", "bg-slate-50");
-        }
-      });
-
-      document.getElementById("modalAppliedUnitPrice").textContent = `Rs. ${unitPrice.toLocaleString()} / pc`;
-      document.getElementById("modalTotalPrice").textContent = `Rs. ${subtotal.toLocaleString()}`;
-
-      const savingsBadge = document.getElementById("modalSavingsBadge");
-      if (unitPrice < basePrice) {
-        const pct = Math.round(((basePrice - unitPrice) / basePrice) * 100);
-        savingsBadge.textContent = `Save ${pct}%`;
-      } else {
-        savingsBadge.textContent = "Tier 1 Rate";
-      }
-    }
-
-    function sendDirectInquiryFromModal() {
-      if (!activeModalProduct) return;
-      const qty = parseInt(document.getElementById("modalQtyInput").value, 10) || activeModalProduct.moq;
-      showToast(`WhatsApp/Lab inquiry sent to ${activeModalProduct.supplier} for ${qty} units.`, "success");
-      closeProductModal();
-    }
-
-    function quickInquiryToast(supplierName) {
-      showToast(`Connected with ${supplierName} desk (091-5853091).`, "info");
-    }
-
-    // ==================== BULK ORDER DRAWER & CAMBRIDGE INVOICE GENERATION ====================
-    function addCurrentModalToCart() {
-      if (!activeModalProduct) return;
-      const qtyInput = document.getElementById("modalQtyInput");
-      const qty = Math.max(activeModalProduct.moq, parseInt(qtyInput.value, 10) || activeModalProduct.moq);
-      const note = document.getElementById("modalCustomNote").value.trim();
-
-      const existingIdx = bulkCart.findIndex((item) => item.productId === activeModalProduct.id);
+      const existingIdx = invoices.findIndex((inv) => inv.serial === serial);
       if (existingIdx > -1) {
-        bulkCart[existingIdx].qty += qty;
-        if (note) bulkCart[existingIdx].note = note;
+        invoices[existingIdx] = invoiceRecord;
+        showToast(`Receipt #${serial} updated in Ledger!`, 'success');
       } else {
-        bulkCart.push({
-          productId: activeModalProduct.id,
-          qty,
-          note
-        });
+        invoices.unshift(invoiceRecord);
+        // Decrement stock if items were selected from inventory
+        if (selectedFrameSku) {
+          const fItem = inventory.find((i) => i.sku === selectedFrameSku);
+          if (fItem && fItem.stock > 0) fItem.stock -= 1;
+        }
+        if (selectedLensSku) {
+          const lItem = inventory.find((i) => i.sku === selectedLensSku);
+          if (lItem && lItem.stock > 0) lItem.stock -= 1;
+        }
+        showToast(`Receipt #${serial} saved to Ledger & Rx Records!`, 'success');
       }
 
-      renderCartDrawer();
-      closeProductModal();
-      toggleCartDrawer(true);
-      showToast(`Added ${qty} pcs to Wholesale Optical Order.`, "success");
+      persistData();
+      refreshAllUI();
     }
 
-    function updateCartItemQty(productId, delta) {
-      const idx = bulkCart.findIndex((i) => i.productId === productId);
-      if (idx === -1) return;
-      const product = products.find((p) => p.id === productId);
-      const minMoq = product ? product.moq : 1;
+    function loadInvoiceIntoSlip(serial, autoPrint = false) {
+      const inv = invoices.find((i) => i.serial === serial);
+      if (!inv) return;
 
-      const nextQty = bulkCart[idx].qty + delta;
-      if (nextQty < minMoq) {
-        showToast(`Minimum order quantity is ${minMoq} units.`, "info");
-        return;
+      document.getElementById('invSerialNo').value = inv.serial;
+      document.getElementById('invCustomerName').value = inv.customerName;
+      document.getElementById('invCustomerPhone').value = inv.customerPhone === 'N/A' ? '' : inv.customerPhone;
+      document.getElementById('invDate').value = inv.date;
+      document.getElementById('invDeliveryDate').value = inv.deliveryDate;
+
+      document.getElementById('rx_r_dist_sph').value = inv.rx?.rDist?.sph || '';
+      document.getElementById('rx_r_dist_cyl').value = inv.rx?.rDist?.cyl || '';
+      document.getElementById('rx_r_dist_axis').value = inv.rx?.rDist?.axis || '';
+      document.getElementById('rx_r_dist_rva').value = inv.rx?.rDist?.rva || '';
+
+      document.getElementById('rx_r_near_sph').value = inv.rx?.rNear?.sph || '';
+      document.getElementById('rx_r_near_cyl').value = inv.rx?.rNear?.cyl || '';
+      document.getElementById('rx_r_near_axis').value = inv.rx?.rNear?.axis || '';
+      document.getElementById('rx_r_near_rva').value = inv.rx?.rNear?.rva || '';
+
+      document.getElementById('rx_l_dist_sph').value = inv.rx?.lDist?.sph || '';
+      document.getElementById('rx_l_dist_cyl').value = inv.rx?.lDist?.cyl || '';
+      document.getElementById('rx_l_dist_axis').value = inv.rx?.lDist?.axis || '';
+      document.getElementById('rx_l_dist_rva').value = inv.rx?.lDist?.rva || '';
+
+      document.getElementById('rx_l_near_sph').value = inv.rx?.lNear?.sph || '';
+      document.getElementById('rx_l_near_cyl').value = inv.rx?.lNear?.cyl || '';
+      document.getElementById('rx_l_near_axis').value = inv.rx?.lNear?.axis || '';
+      document.getElementById('rx_l_near_rva').value = inv.rx?.lNear?.rva || '';
+
+      document.getElementById('invRpd').value = inv.rpd || '';
+      document.getElementById('invLpd').value = inv.lpd || '';
+      document.getElementById('invHeight').value = inv.height || '';
+
+      document.getElementById('invFrameDesc').value = inv.frameDesc || '';
+      document.getElementById('invFrameRs').value = inv.frameRs || 0;
+      document.getElementById('invLensesDesc').value = inv.lensesDesc || '';
+      document.getElementById('invLensesRs').value = inv.lensesRs || 0;
+
+      document.getElementById('invTotalRs').value = inv.totalRs || 0;
+      document.getElementById('invAdvanceRs').value = inv.advanceRs || 0;
+      document.getElementById('invBalanceRs').value = inv.balanceRs || 0;
+
+      document.getElementById('invExaminedBy').value = inv.examinedBy || '';
+      document.getElementById('invSignature').value = inv.signature || '';
+
+      selectedFrameSku = '';
+      selectedLensSku = '';
+      switchSection('newInvoice');
+
+      if (autoPrint) {
+        setTimeout(() => window.print(), 250);
+      } else {
+        showToast(`Loaded Receipt #${inv.serial} (${inv.customerName}) for viewing/editing.`, 'info');
       }
-      bulkCart[idx].qty = nextQty;
-      renderCartDrawer();
     }
 
-    function removeCartItem(productId) {
-      bulkCart = bulkCart.filter((i) => i.productId !== productId);
-      renderCartDrawer();
+    function resetReceiptFormOnly() {
+      const textIds = [
+        'invCustomerName', 'invCustomerPhone',
+        'rx_r_dist_sph', 'rx_r_dist_cyl', 'rx_r_dist_axis', 'rx_r_dist_rva',
+        'rx_r_near_sph', 'rx_r_near_cyl', 'rx_r_near_axis', 'rx_r_near_rva',
+        'rx_l_dist_sph', 'rx_l_dist_cyl', 'rx_l_dist_axis', 'rx_l_dist_rva',
+        'rx_l_near_sph', 'rx_l_near_cyl', 'rx_l_near_axis', 'rx_l_near_rva',
+        'invRpd', 'invLpd', 'invHeight',
+        'invFrameDesc', 'invLensesDesc', 'invExaminedBy', 'invSignature'
+      ];
+      textIds.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+
+      document.getElementById('invFrameRs').value = 0;
+      document.getElementById('invLensesRs').value = 0;
+      document.getElementById('invTotalRs').value = 0;
+      document.getElementById('invAdvanceRs').value = 0;
+      document.getElementById('invBalanceRs').value = 0;
+      document.getElementById('quickFrameSelect').value = '';
+      document.getElementById('quickLensSelect').value = '';
+      selectedFrameSku = '';
+      selectedLensSku = '';
+      setDefaultDates();
     }
 
-    function renderCartDrawer() {
-      const container = document.getElementById("cartItemsContainer");
-      const mobileBadge = document.getElementById("mobileCartBadge");
-      const desktopBadge = document.getElementById("desktopCartBadge");
+    function prepareNewBlankReceipt() {
+      resetReceiptFormOnly();
+      assignNextSerialNumber();
+      switchSection('newInvoice');
+      showToast(`Prepared new blank receipt #${document.getElementById('invSerialNo').value}.`, 'info');
+    }
 
-      mobileBadge.textContent = bulkCart.length;
-      desktopBadge.textContent = bulkCart.length;
+    // ==================== SAVED INVOICES & LEDGER TABLE ====================
+    function renderLedgerTable() {
+      const tbody = document.getElementById('ledgerTableBody');
+      const query = (document.getElementById('ledgerSearchInput').value || '').trim().toLowerCase();
+      const statusFilter = document.getElementById('ledgerStatusFilter').value;
 
-      if (bulkCart.length === 0) {
-        container.innerHTML = `
-          <div class="h-full flex flex-col items-center justify-center text-center py-12 px-4 space-y-3">
-            <div class="w-14 h-14 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center text-2xl">
-              <i class="fa-solid fa-glasses"></i>
-            </div>
-            <h4 class="font-bold text-slate-900">Your Optical Order is Empty</h4>
-            <p class="text-xs text-slate-500 max-w-xs">Add wholesale frames, lenses, or equipment from the catalog to auto-fill your Cambridge Opticians Invoice.</p>
-          </div>
+      const filtered = invoices.filter((inv) => {
+        const matchesQuery =
+          inv.serial.toLowerCase().includes(query) ||
+          inv.customerName.toLowerCase().includes(query) ||
+          inv.customerPhone.toLowerCase().includes(query) ||
+          (inv.frameDesc || '').toLowerCase().includes(query);
+
+        let status = 'PAID';
+        if (inv.balanceRs > 0 && inv.advanceRs > 0) status = 'PARTIAL';
+        else if (inv.balanceRs > 0 && inv.advanceRs === 0) status = 'UNPAID';
+
+        const matchesStatus = statusFilter === 'ALL' || status === statusFilter;
+        return matchesQuery && matchesStatus;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="9" class="py-10 text-center text-slate-400 font-semibold">
+              No matching invoices found in the ledger.
+            </td>
+          </tr>
         `;
-        document.getElementById("cartTotalUnits").textContent = "0 pcs";
-        document.getElementById("cartGrandTotal").textContent = "Rs. 0";
         return;
       }
 
-      let totalUnits = 0;
-      let grandTotal = 0;
-
-      container.innerHTML = bulkCart
-        .map((item) => {
-          const product = products.find((p) => p.id === item.productId);
-          if (!product) return "";
-          const { unitPrice } = getUnitPriceForQuantity(product, item.qty);
-          const lineTotal = item.qty * unitPrice;
-          totalUnits += item.qty;
-          grandTotal += lineTotal;
+      tbody.innerHTML = filtered
+        .map((inv) => {
+          let badgeHtml = `<span class="bg-emerald-100 text-emerald-800 font-extrabold px-2.5 py-1 rounded-full text-[11px]">Paid</span>`;
+          if (inv.balanceRs > 0 && inv.advanceRs > 0) {
+            badgeHtml = `<span class="bg-amber-100 text-amber-800 font-extrabold px-2.5 py-1 rounded-full text-[11px]">Partial</span>`;
+          } else if (inv.balanceRs > 0 && inv.advanceRs === 0) {
+            badgeHtml = `<span class="bg-rose-100 text-rose-800 font-extrabold px-2.5 py-1 rounded-full text-[11px]">Unpaid</span>`;
+          }
 
           return `
-            <div class="bg-white rounded-xl border border-slate-200 p-3.5 shadow-2xs space-y-2.5">
-              <div class="flex gap-3">
-                <img src="${product.image}" alt="${product.title}" class="w-16 h-16 rounded-lg object-cover border border-slate-100 shrink-0" />
-                <div class="flex-1 min-w-0">
-                  <div class="flex items-start justify-between gap-2">
-                    <h5 class="text-xs font-bold text-slate-900 line-clamp-2">${product.title}</h5>
-                    <button onclick="removeCartItem('${product.id}')" class="text-slate-400 hover:text-rose-600 text-xs p-1">
-                      <i class="fa-solid fa-trash-can"></i>
-                    </button>
+            <tr class="hover:bg-slate-50/90 transition">
+              <td class="py-3.5 px-4 font-monoStamp font-bold text-sm text-navy-900">#${inv.serial}</td>
+              <td class="py-3.5 px-4">
+                <div class="font-bold text-slate-800">${inv.date}</div>
+                <div class="text-[11px] text-slate-400">Due: ${inv.deliveryDate || '-'}</div>
+              </td>
+              <td class="py-3.5 px-4">
+                <div class="font-bold text-slate-900">${inv.customerName}</div>
+                <div class="text-[11px] text-slate-500">${inv.customerPhone}</div>
+              </td>
+              <td class="py-3.5 px-4 max-w-[210px]">
+                <div class="truncate font-medium text-slate-800">${inv.frameDesc || '—'}</div>
+                <div class="truncate text-[11px] text-slate-500">${inv.lensesDesc || '—'}</div>
+              </td>
+              <td class="py-3.5 px-4 text-right font-extrabold text-slate-900">Rs. ${Number(inv.totalRs).toLocaleString()}</td>
+              <td class="py-3.5 px-4 text-right font-bold text-emerald-700">Rs. ${Number(inv.advanceRs).toLocaleString()}</td>
+              <td class="py-3.5 px-4 text-right font-extrabold ${inv.balanceRs > 0 ? 'text-rose-600' : 'text-slate-400'}">
+                Rs. ${Number(inv.balanceRs).toLocaleString()}
+              </td>
+              <td class="py-3.5 px-4 text-center">${badgeHtml}</td>
+              <td class="py-3.5 px-4 text-right">
+                <div class="inline-flex items-center gap-1.5">
+                  ${
+                    inv.balanceRs > 0
+                      ? `<button onclick="openBalanceModal('${inv.serial}')" title="Collect Balance Payment" class="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] transition">
+                          Pay Bal
+                        </button>`
+                      : ''
+                  }
+                  <button onclick="loadInvoiceIntoSlip('${inv.serial}', false)" title="Open / Edit Slip" class="p-2 rounded-lg bg-slate-100 hover:bg-navy-900 hover:text-white text-slate-700 transition">
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
+                  <button onclick="loadInvoiceIntoSlip('${inv.serial}', true)" title="Reprint Slip" class="p-2 rounded-lg bg-amber-100 hover:bg-amber-300 text-navy-900 transition">
+                    <i class="fa-solid fa-print"></i>
+                  </button>
+                  <button onclick="deleteInvoice('${inv.serial}')" title="Delete Receipt" class="p-2 rounded-lg bg-slate-100 hover:bg-rose-600 hover:text-white text-slate-500 transition">
+                    <i class="fa-solid fa-trash-can"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          `;
+        })
+        .join('');
+    }
+
+    function deleteInvoice(serial) {
+      invoices = invoices.filter((i) => i.serial !== serial);
+      persistData();
+      refreshAllUI();
+      showToast(`Invoice #${serial} removed from ledger.`, 'info');
+    }
+
+    // ==================== COLLECT BALANCE PAYMENT MODAL ====================
+    function openBalanceModal(serial) {
+      const inv = invoices.find((i) => i.serial === serial);
+      if (!inv) return;
+
+      activeBalanceInvoiceSerial = serial;
+      document.getElementById('balModalSubtitle').textContent = `Receipt #${inv.serial} • ${inv.date}`;
+      document.getElementById('balModalCustomer').textContent = `${inv.customerName} (${inv.customerPhone})`;
+      document.getElementById('balModalTotal').textContent = `Rs. ${inv.totalRs.toLocaleString()}`;
+      document.getElementById('balModalPaid').textContent = `Rs. ${inv.advanceRs.toLocaleString()}`;
+      document.getElementById('balModalRemaining').textContent = `Rs. ${inv.balanceRs.toLocaleString()}`;
+
+      const payInput = document.getElementById('balPaymentInput');
+      payInput.max = inv.balanceRs;
+      payInput.value = inv.balanceRs;
+
+      const modal = document.getElementById('balanceModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeBalanceModal() {
+      const modal = document.getElementById('balanceModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      activeBalanceInvoiceSerial = null;
+    }
+
+    function submitBalancePayment(e) {
+      e.preventDefault();
+      if (!activeBalanceInvoiceSerial) return;
+
+      const inv = invoices.find((i) => i.serial === activeBalanceInvoiceSerial);
+      if (!inv) return;
+
+      const received = parseFloat(document.getElementById('balPaymentInput').value) || 0;
+      if (received <= 0) return;
+
+      inv.advanceRs = Math.min(inv.totalRs, inv.advanceRs + received);
+      inv.balanceRs = Math.max(0, inv.totalRs - inv.advanceRs);
+
+      persistData();
+      refreshAllUI();
+      closeBalanceModal();
+      showToast(`Recorded Rs. ${received.toLocaleString()} payment for Receipt #${inv.serial}.`, 'success');
+    }
+
+    // ==================== INVENTORY & STOCK MANAGEMENT ====================
+    function handleAddInventoryItem(e) {
+      e.preventDefault();
+
+      const sku = document.getElementById('stockSku').value.trim().toUpperCase();
+      const name = document.getElementById('stockName').value.trim();
+      const category = document.getElementById('stockCategory').value;
+      const stock = parseInt(document.getElementById('stockQty').value, 10) || 0;
+      const cost = parseFloat(document.getElementById('stockCost').value) || 0;
+      const price = parseFloat(document.getElementById('stockPrice').value) || 0;
+
+      const existingIdx = inventory.findIndex((i) => i.sku === sku);
+      if (existingIdx > -1) {
+        inventory[existingIdx] = { sku, name, category, cost, price, stock };
+        showToast(`Updated stock item ${sku}.`, 'success');
+      } else {
+        inventory.unshift({ sku, name, category, cost, price, stock });
+        showToast(`Added "${name}" (${sku}) to shop stock.`, 'success');
+      }
+
+      persistData();
+      refreshAllUI();
+      e.target.reset();
+    }
+
+    function deleteInventoryItem(sku) {
+      inventory = inventory.filter((i) => i.sku !== sku);
+      persistData();
+      refreshAllUI();
+      showToast(`Removed SKU ${sku} from inventory.`, 'info');
+    }
+
+    function renderInventoryTable() {
+      const tbody = document.getElementById('inventoryTableBody');
+      const query = (document.getElementById('stockSearchInput').value || '').trim().toLowerCase();
+
+      const filtered = inventory.filter(
+        (item) =>
+          item.sku.toLowerCase().includes(query) ||
+          item.name.toLowerCase().includes(query) ||
+          item.category.toLowerCase().includes(query)
+      );
+
+      tbody.innerHTML = filtered
+        .map(
+          (item) => `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="py-3 px-4 font-mono font-bold text-navy-900">${item.sku}</td>
+            <td class="py-3 px-4 font-bold text-slate-900">${item.name}</td>
+            <td class="py-3 px-4">
+              <span class="px-2 py-0.5 rounded-md text-[11px] font-bold ${
+                item.category === 'Lenses'
+                  ? 'bg-sky-100 text-sky-800'
+                  : item.category === 'Frame'
+                  ? 'bg-amber-100 text-amber-800'
+                  : 'bg-slate-100 text-slate-700'
+              }">${item.category}</span>
+            </td>
+            <td class="py-3 px-4 text-right text-slate-500">Rs. ${item.cost.toLocaleString()}</td>
+            <td class="py-3 px-4 text-right font-extrabold text-emerald-700">Rs. ${item.price.toLocaleString()}</td>
+            <td class="py-3 px-4 text-center">
+              <span class="font-bold ${item.stock <= 5 ? 'text-rose-600' : 'text-slate-800'}">${item.stock}</span>
+            </td>
+            <td class="py-3 px-4 text-right">
+              <div class="inline-flex items-center gap-1.5">
+                <button
+                  onclick="addInventoryItemToActiveReceipt('${item.sku}')"
+                  class="px-2.5 py-1.5 rounded-lg bg-navy-900 hover:bg-navy-800 text-amber-300 font-bold text-[11px] transition"
+                >
+                  + Add to Invoice
+                </button>
+                <button
+                  onclick="deleteInventoryItem('${item.sku}')"
+                  title="Delete Stock Item"
+                  class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition"
+                >
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `
+        )
+        .join('');
+    }
+
+    // ==================== CUSTOMER RX RECORDS DIRECTORY ====================
+    function renderCustomersGrid() {
+      const grid = document.getElementById('customersGrid');
+      const query = (document.getElementById('customerSearchInput').value || '').trim().toLowerCase();
+
+      const filtered = invoices.filter(
+        (inv) =>
+          inv.customerName.toLowerCase().includes(query) ||
+          inv.customerPhone.toLowerCase().includes(query) ||
+          inv.serial.toLowerCase().includes(query)
+      );
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="col-span-full bg-white rounded-2xl border border-slate-200 p-10 text-center text-xs text-slate-400 font-semibold">No patient Rx records match your search.</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered
+        .map((inv) => {
+          const rD = inv.rx?.rDist || {};
+          const lD = inv.rx?.lDist || {};
+          return `
+            <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-2xs space-y-3 flex flex-col justify-between">
+              <div class="space-y-2.5">
+                <div class="flex items-start justify-between gap-2">
+                  <div>
+                    <h3 class="text-sm font-extrabold text-navy-900">${inv.customerName}</h3>
+                    <p class="text-xs text-slate-500"><i class="fa-solid fa-phone text-[10px] mr-1"></i> ${inv.customerPhone}</p>
                   </div>
-                  <p class="text-[11px] text-slate-500 mt-0.5">${product.category} • ${product.supplier}</p>
-                  <div class="text-xs font-extrabold text-emerald-700 mt-1">Rs. ${unitPrice.toLocaleString()} / pc</div>
+                  <span class="font-monoStamp text-xs font-bold bg-amber-100 text-navy-900 px-2 py-0.5 rounded">#${inv.serial}</span>
+                </div>
+
+                <!-- Mini Rx Summary Table -->
+                <div class="bg-slate-50 rounded-xl border border-slate-200 p-2.5 text-[11px]">
+                  <div class="grid grid-cols-5 font-bold text-slate-500 border-b border-slate-200 pb-1 mb-1 text-center">
+                    <span class="text-left">Eye</span>
+                    <span>Sph</span>
+                    <span>Cyl</span>
+                    <span>Axis</span>
+                    <span>RVA</span>
+                  </div>
+                  <div class="grid grid-cols-5 font-bold text-slate-800 text-center py-0.5">
+                    <span class="text-left text-navy-900">Right</span>
+                    <span>${rD.sph || '—'}</span>
+                    <span>${rD.cyl || '—'}</span>
+                    <span>${rD.axis || '—'}</span>
+                    <span>${rD.rva || '—'}</span>
+                  </div>
+                  <div class="grid grid-cols-5 font-bold text-slate-800 text-center py-0.5">
+                    <span class="text-left text-navy-900">Left</span>
+                    <span>${lD.sph || '—'}</span>
+                    <span>${lD.cyl || '—'}</span>
+                    <span>${lD.axis || '—'}</span>
+                    <span>${lD.rva || '—'}</span>
+                  </div>
+                  <div class="mt-1.5 pt-1.5 border-t border-slate-200 flex justify-between text-[10px] font-semibold text-slate-600">
+                    <span>R-PD: <strong>${inv.rpd || '-'} mm</strong></span>
+                    <span>L-PD: <strong>${inv.lpd || '-'} mm</strong></span>
+                    <span>Date: <strong>${inv.date}</strong></span>
+                  </div>
                 </div>
               </div>
 
-              <div class="flex items-center justify-between pt-2 border-t border-slate-100">
-                <div class="inline-flex items-center border border-slate-200 rounded-lg overflow-hidden">
-                  <button onclick="updateCartItemQty('${product.id}', -5)" class="px-2.5 py-1 bg-slate-50 hover:bg-slate-100 text-xs font-bold">-</button>
-                  <span class="px-3 py-1 text-xs font-bold text-slate-800">${item.qty} pcs</span>
-                  <button onclick="updateCartItemQty('${product.id}', 5)" class="px-2.5 py-1 bg-slate-50 hover:bg-slate-100 text-xs font-bold">+</button>
-                </div>
-                <span class="text-sm font-extrabold text-navy-900">Rs. ${lineTotal.toLocaleString()}</span>
+              <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+                <span class="text-[11px] font-semibold text-slate-500 truncate max-w-[170px]">${inv.frameDesc || 'Custom Rx'}</span>
+                <button
+                  onclick="loadInvoiceIntoSlip('${inv.serial}', false)"
+                  class="text-xs font-extrabold text-navy-800 hover:text-orange-600 transition flex items-center gap-1"
+                >
+                  Open Slip <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
               </div>
             </div>
           `;
         })
-        .join("");
-
-      document.getElementById("cartTotalUnits").textContent = `${totalUnits.toLocaleString()} pcs`;
-      document.getElementById("cartGrandTotal").textContent = `Rs. ${grandTotal.toLocaleString()}`;
+        .join('');
     }
 
-    function toggleCartDrawer(open) {
-      const drawer = document.getElementById("cartDrawer");
-      const backdrop = document.getElementById("cartDrawerBackdrop");
-      if (open) {
-        backdrop.classList.remove("hidden");
-        drawer.classList.remove("translate-x-full");
-      } else {
-        backdrop.classList.add("hidden");
-        drawer.classList.add("translate-x-full");
-      }
-    }
-
-    // Transfers the Bulk Order items cleanly into the Cambridge Opticians Invoice Card (Frame vs. Lances)
-    function generateCambridgeInvoiceFromCart() {
-      if (bulkCart.length === 0) {
-        showToast("Add items to your order first, or open the Rx Slip tab directly.", "info");
-        return;
-      }
-
-      let frameSummaries = [];
-      let frameTotal = 0;
-      let lensSummaries = [];
-      let lensTotal = 0;
-
-      bulkCart.forEach((item) => {
-        const product = products.find((p) => p.id === item.productId);
-        if (!product) return;
-        const { unitPrice } = getUnitPriceForQuantity(product, item.qty);
-        const lineTotal = item.qty * unitPrice;
-
-        const shortLabel = `${product.title.split("—")[0].trim()} (${item.qty} pcs)`;
-
-        if (product.category === "Lenses" || product.category === "Contact Lenses") {
-          lensSummaries.push(shortLabel);
-          lensTotal += lineTotal;
-        } else {
-          frameSummaries.push(shortLabel);
-          frameTotal += lineTotal;
-        }
-      });
-
-      const buyerName = document.getElementById("drawerBuyerName").value.trim();
-      const buyerPhone = document.getElementById("drawerBuyerPhone").value.trim();
-
-      if (buyerName) document.getElementById("invCustomerName").value = buyerName;
-      if (buyerPhone) document.getElementById("invCustomerPhone").value = buyerPhone;
-
-      document.getElementById("invFrameDesc").value = frameSummaries.join(", ");
-      document.getElementById("invFrameRs").value = frameTotal;
-
-      document.getElementById("invLensesDesc").value = lensSummaries.join(", ");
-      document.getElementById("invLensesRs").value = lensTotal;
-
-      // Default Advance to 50% or 0 if user prefers to enter manually
-      document.getElementById("invAdvanceRs").value = 0;
-      recalculateInvoiceTotals();
-
-      toggleCartDrawer(false);
-      switchView("invoiceSlip");
-      showToast(`Cambridge Opticians Invoice #${document.getElementById("invSerialNo").value} populated & ready to print!`, "success");
-    }
-
-    // ==================== CAMBRIDGE INVOICE CALCULATIONS ====================
-    function recalculateInvoiceTotals() {
-      const frameRs = parseFloat(document.getElementById("invFrameRs").value) || 0;
-      const lensesRs = parseFloat(document.getElementById("invLensesRs").value) || 0;
-      const advanceRs = parseFloat(document.getElementById("invAdvanceRs").value) || 0;
-
-      const total = frameRs + lensesRs;
-      const balance = Math.max(0, total - advanceRs);
-
-      document.getElementById("invTotalRs").value = total;
-      document.getElementById("invBalanceRs").value = balance;
-    }
-
-    function resetInvoiceForm() {
-      currentReceiptSerial += 1;
-      document.getElementById("invSerialNo").value = currentReceiptSerial;
-      document.getElementById("nextSlipPreview").textContent = currentReceiptSerial + 1;
-
-      document.getElementById("invCustomerName").value = "";
-      document.getElementById("invCustomerPhone").value = "";
-      initInvoiceDates();
-
-      const rxFields = [
-        "rx_r_dist_sph", "rx_r_dist_cyl", "rx_r_dist_axis", "rx_r_dist_rva",
-        "rx_r_near_sph", "rx_r_near_cyl", "rx_r_near_axis", "rx_r_near_rva",
-        "rx_l_dist_sph", "rx_l_dist_cyl", "rx_l_dist_axis", "rx_l_dist_rva",
-        "rx_l_near_sph", "rx_l_near_cyl", "rx_l_near_axis", "rx_l_near_rva",
-        "invRpd", "invLpd", "invHeight", "invFrameDesc", "invLensesDesc",
-        "invExaminedBy", "invSignature"
-      ];
-      rxFields.forEach((id) => {
-        const el = document.getElementById(id);
-        if (el) el.value = "";
-      });
-
-      document.getElementById("invFrameRs").value = 0;
-      document.getElementById("invLensesRs").value = 0;
-      document.getElementById("invAdvanceRs").value = 0;
-      recalculateInvoiceTotals();
-
-      showToast(`New Cambridge Opticians Slip #${currentReceiptSerial} ready.`, "info");
-    }
-
-    // ==================== SELLER HUB: ADD & MANAGE PRODUCTS ====================
-    function renderImagePresets() {
-      const grid = document.getElementById("imagePresetGrid");
-      const urlInput = document.getElementById("prodImageUrl");
-      urlInput.value = IMAGE_PRESETS[0].url;
-
-      grid.innerHTML = IMAGE_PRESETS.map(
-        (preset, idx) => `
-          <button
-            type="button"
-            onclick="selectImagePreset('${preset.url}', this)"
-            title="${preset.label}"
-            class="preset-thumb relative aspect-square rounded-xl overflow-hidden border-2 ${
-              idx === 0 ? "border-orange-500 ring-2 ring-orange-500/20" : "border-slate-200"
-            } hover:border-orange-400 transition"
-          >
-            <img src="${preset.url}" alt="${preset.label}" class="w-full h-full object-cover" />
-          </button>
-        `
-      ).join("");
-    }
-
-    function selectImagePreset(url, btnEl) {
-      document.getElementById("prodImageUrl").value = url;
-      document.querySelectorAll(".preset-thumb").forEach((el) => {
-        el.classList.remove("border-orange-500", "ring-2", "ring-orange-500/20");
-        el.classList.add("border-slate-200");
-      });
-      btnEl.classList.add("border-orange-500", "ring-2", "ring-orange-500/20");
-      btnEl.classList.remove("border-slate-200");
-    }
-
-    function handleAddProduct(e) {
-      e.preventDefault();
-
-      const moq = parseInt(document.getElementById("prodMoq").value, 10) || 12;
-      const p1 = parseFloat(document.getElementById("priceTier1").value) || 1800;
-      const p2 = parseFloat(document.getElementById("priceTier2").value) || 1450;
-      const p3 = parseFloat(document.getElementById("priceTier3").value) || 1150;
-
-      const tier2Min = Math.max(moq + 20, 50);
-      const tier3Min = Math.max(tier2Min + 50, 150);
-
-      const newProduct = {
-        id: "OPT-" + Math.floor(200 + Math.random() * 799),
-        title: document.getElementById("prodTitle").value.trim(),
-        category: document.getElementById("prodCategory").value,
-        supplier: document.getElementById("prodSupplier").value.trim(),
-        location: document.getElementById("prodLocation").value.trim(),
-        years: 1,
-        verified: document.getElementById("prodVerified").checked,
-        readyToShip: document.getElementById("prodReady").checked,
-        customOem: document.getElementById("prodOem").checked,
-        moq,
-        tiers: [
-          { min: moq, max: tier2Min - 1, price: p1 },
-          { min: tier2Min, max: tier3Min - 1, price: p2 },
-          { min: tier3Min, max: null, price: p3 }
-        ],
-        image: document.getElementById("prodImageUrl").value.trim()
-      };
-
-      products.unshift(newProduct);
-      applyFilters();
-      renderSellerInventory();
-      e.target.reset();
-      renderImagePresets();
-
-      showToast(`"${newProduct.title}" published to Optical Catalog!`, "success");
-      switchView("marketplace");
-    }
-
-    function deleteProduct(productId) {
-      products = products.filter((p) => p.id !== productId);
-      bulkCart = bulkCart.filter((c) => c.productId !== productId);
-      applyFilters();
-      renderSellerInventory();
-      renderCartDrawer();
-      showToast("Optical SKU removed from catalog.", "info");
-    }
-
-    function renderSellerInventory() {
-      const list = document.getElementById("sellerInventoryList");
-      document.getElementById("sellerCatalogCount").textContent = `${products.length} SKUs`;
-
-      list.innerHTML = products
-        .map(
-          (p) => `
-          <div class="flex items-center justify-between gap-3 p-3 rounded-xl border border-slate-200 hover:bg-slate-50 transition">
-            <div class="flex items-center gap-3 min-w-0">
-              <img src="${p.image}" alt="${p.title}" class="w-12 h-12 rounded-lg object-cover border border-slate-200 shrink-0" />
-              <div class="min-w-0">
-                <h4 class="text-xs font-bold text-slate-900 truncate">${p.title}</h4>
-                <p class="text-[11px] text-slate-500 truncate">${p.category} • MOQ ${p.moq}</p>
-                <span class="text-[11px] font-bold text-emerald-700">Rs. ${p.tiers[p.tiers.length - 1].price.toLocaleString()} - ${p.tiers[0].price.toLocaleString()}</span>
-              </div>
-            </div>
-            <button onclick="deleteProduct('${p.id}')" title="Remove Listing" class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition shrink-0">
-              <i class="fa-solid fa-trash-can text-xs"></i>
-            </button>
-          </div>
-        `
-        )
-        .join("");
-    }
-
-    // ==================== RFQ BOARD & MODAL ====================
-    function openRfqModal() {
-      const modal = document.getElementById("rfqModal");
-      modal.classList.remove("hidden");
-      modal.classList.add("flex");
-    }
-
-    function closeRfqModal() {
-      const modal = document.getElementById("rfqModal");
-      modal.classList.add("hidden");
-      modal.classList.remove("flex");
-    }
-
-    function handleCreateRfq(e) {
-      e.preventDefault();
-      const newRfq = {
-        id: "RFQ-" + Math.floor(305 + Math.random() * 690),
-        product: document.getElementById("rfqProduct").value.trim(),
-        qty: parseInt(document.getElementById("rfqQty").value, 10) || 100,
-        targetPrice: parseFloat(document.getElementById("rfqTargetPrice").value) || 0,
-        buyer: document.getElementById("rfqBuyer").value.trim(),
-        details: document.getElementById("rfqDetails").value.trim() || "Standard optical box packaging.",
-        quotesReceived: 0,
-        postedAgo: "Just now"
-      };
-
-      rfqList.unshift(newRfq);
-      renderRfqFeed();
-      closeRfqModal();
-      e.target.reset();
-      switchView("rfqFeed");
-      showToast(`Optical RFQ ${newRfq.id} posted!`, "success");
-    }
-
-    function submitQuoteToRfq(rfqId) {
-      const rfq = rfqList.find((r) => r.id === rfqId);
-      if (!rfq) return;
-      rfq.quotesReceived += 1;
-      renderRfqFeed();
-      showToast(`Wholesale quote sent to ${rfq.buyer}!`, "success");
-    }
-
-    function renderRfqFeed() {
-      const grid = document.getElementById("rfqGrid");
-      document.getElementById("rfqCountBadge").textContent = rfqList.length;
-
-      grid.innerHTML = rfqList
-        .map(
-          (rfq) => `
-          <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex flex-col justify-between space-y-4">
-            <div class="space-y-2.5">
-              <div class="flex items-center justify-between">
-                <span class="text-xs font-extrabold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-lg">${rfq.id}</span>
-                <span class="text-[11px] text-slate-400">${rfq.postedAgo}</span>
-              </div>
-              <h3 class="text-base font-bold text-navy-900 leading-snug">${rfq.product}</h3>
-              <p class="text-xs text-slate-600 line-clamp-2">${rfq.details}</p>
-
-              <div class="grid grid-cols-2 gap-2 bg-slate-50 p-3 rounded-xl border border-slate-100 text-xs">
-                <div>
-                  <span class="text-slate-400 block text-[11px]">Order Volume</span>
-                  <strong class="text-slate-900">${rfq.qty.toLocaleString()} pcs</strong>
-                </div>
-                <div>
-                  <span class="text-slate-400 block text-[11px]">Target Rate</span>
-                  <strong class="text-emerald-700">${rfq.targetPrice > 0 ? `Rs. ${rfq.targetPrice.toLocaleString()}` : "Open Quote"}</strong>
-                </div>
-              </div>
-            </div>
-
-            <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
-              <div class="text-[11px] text-slate-500 truncate">
-                <i class="fa-solid fa-building text-slate-400 mr-1"></i> ${rfq.buyer}
-              </div>
-              <button
-                onclick="submitQuoteToRfq('${rfq.id}')"
-                class="bg-navy-900 hover:bg-orange-500 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition shrink-0"
-              >
-                Send Quote (${rfq.quotesReceived})
-              </button>
-            </div>
-          </div>
-        `
-        )
-        .join("");
-    }
-
-    // ==================== TOAST NOTIFICATION HELPER ====================
-    function showToast(message, type = "success") {
-      const container = document.getElementById("toastContainer");
-      const toast = document.createElement("div");
+    // ==================== TOAST HELPER ====================
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
 
       const iconClass =
-        type === "success"
-          ? "fa-circle-check text-emerald-400"
-          : "fa-circle-info text-amber-300";
+        type === 'success'
+          ? 'fa-circle-check text-emerald-400'
+          : type === 'error'
+          ? 'fa-triangle-exclamation text-rose-400'
+          : 'fa-circle-info text-amber-300';
 
       toast.className =
-        "pointer-events-auto bg-navy-900 text-white px-4 py-3 rounded-xl shadow-xl border border-slate-700 flex items-center gap-3 text-xs font-medium transform transition-all duration-300 translate-y-2 opacity-0";
+        'pointer-events-auto bg-slate-900 text-white px-4 py-3 rounded-xl shadow-xl border border-slate-700 flex items-center gap-3 text-xs font-semibold transform transition-all duration-300 translate-y-2 opacity-0';
 
       toast.innerHTML = `
         <i class="fa-solid ${iconClass} text-base shrink-0"></i>
@@ -1932,15 +1543,12 @@
       `;
 
       container.appendChild(toast);
-
-      requestAnimationFrame(() => {
-        toast.classList.remove("translate-y-2", "opacity-0");
-      });
+      requestAnimationFrame(() => toast.classList.remove('translate-y-2', 'opacity-0'));
 
       setTimeout(() => {
-        toast.classList.add("opacity-0", "translate-y-2");
+        toast.classList.add('opacity-0', 'translate-y-2');
         setTimeout(() => toast.remove(), 300);
-      }, 3600);
+      }, 3400);
     }
   </script>
 </body>
